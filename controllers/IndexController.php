@@ -71,6 +71,14 @@ class IndexController extends BaseController{
         }
     }
 
+    public function employers(){
+        echo 'employers';
+    }
+
+    public function bookit(){
+        echo 'bookit';    
+    }
+
 }
 
 

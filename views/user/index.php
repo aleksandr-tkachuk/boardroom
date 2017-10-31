@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title> Пользователи. </title>
+<title></title> 
 <meta charset="utf-8">
 <link href="style.css" type="text/css" rel="stylesheet">
 </head>
-	<body>
+<body>
 <?php include(BASE_PASS . 'views/menu.php'); ?>
 
+<a href='index.php?c=employeelist&a=create'>create<br>
 <?php
-foreach ($users as $value) {
-    echo $value['login']."&nbsp;<a href='admin.php?c=user&a=update&user_id="
-            .$value['id']."'>изменить</a><br>";
+foreach ($author as $value) {
+    echo $value['users_name']."&nbsp;<a href='index.php?c=employeelist&a=update=&users_id="
+        .$value['users_id']."'>change</a>&nbsp;"
+        . "&nbsp;<a href='index.php?c=employeelist&a=delete&users_id="
+        .$value['users_id']."'>delete</a>";
 }
 ?>
-	</body>
+</body>
 </html>
