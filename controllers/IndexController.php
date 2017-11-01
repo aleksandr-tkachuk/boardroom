@@ -54,6 +54,8 @@ class IndexController extends BaseController{
                         $_SESSION["auth"] = true;
                         $_SESSION["authName"] = $user->users_name;
                         $_SESSION["userRole"] = $user->users_role;
+                        $_SESSION["userId"] = $user->users_id;
+
                         $_SESSION["authError"] = "";
                     }
                 }else{

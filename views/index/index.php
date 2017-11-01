@@ -10,7 +10,8 @@
         <div id="contentDiv">
             <div id="roomNavigationMenu">
                 <? foreach ($rooms as $room) { ?>
-                    <a href="index.php?room=<?= $room["rooms_id"] ?>"><?= $room["rooms_name"] ?></a>&nbsp;&nbsp;
+                    <a href="index.php?room=<?=$room['rooms_id'] ?>"><?=$room['rooms_name'] ?></a>&nbsp;&nbsp;
+}
                 <? } ?>
             </div>
             <div id="timeNavigationMenu">
@@ -60,7 +61,7 @@
             </div>
         </div>
         <div id="menuDiv">
-            <a href="index.php?c=index&a=bookit">Book It</a>&nbsp;&nbsp;
+            <a href="index.php?c=bookit&a=index">Book It</a>&nbsp;&nbsp;
             <? if (App::checkAdmin()) { ?>
                 <a href="index.php?c=employeelist&a=index">Employee List</a>
             <? } ?>

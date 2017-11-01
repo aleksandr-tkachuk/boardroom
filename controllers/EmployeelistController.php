@@ -9,8 +9,14 @@ class EmployeelistController extends BaseController{
     }
 
     public function update() {
-        $user = Employeelist::model()->find($_GET['users_id']);
-        print_r($user);
+        if(isset($_POST['submit'])){  
+            $user = Employeelist::model()->find($_POST['hidden']); 
+            $user->users_name = $_POST['user'];
+            $user->save();
+            header('Location: index.php?c=employeelist&a=index');
+        }
+        $users = Employeelist::model()->find($_GET['users_id']);
+        $this->render('update', ['user'=>$users]);
 
     }
 
