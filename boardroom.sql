@@ -60,7 +60,7 @@ CREATE TABLE `users` (
   `users_name` varchar(255) NOT NULL,
   `users_login` varchar(255) NOT NULL,
   `users_password` varchar(255) NOT NULL,
-  `users_role` int(11) NOT NULL DEFAULT '0' COMMENT '1 - admin, 0 - user'
+  `users_role` int(11) NOT NULL DEFAULT '0' COMMENT '1 - admin, 0 - employeelist'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -74,7 +74,7 @@ TRUNCATE TABLE `users`;
 
 INSERT INTO `users` (`users_id`, `users_name`, `users_login`, `users_password`, `users_role`) VALUES
 (1, 'Admin', 'admin', '21232f297a57a5a743894a0e4a801fc3', 1),
-(2, 'User', 'user', '21232f297a57a5a743894a0e4a801fc3', 0);
+(2, 'User', 'employeelist', '21232f297a57a5a743894a0e4a801fc3', 0);
 
 --
 -- Индексы сохранённых таблиц

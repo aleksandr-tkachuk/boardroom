@@ -57,7 +57,7 @@ class IndexController extends BaseController{
                         $_SESSION["authError"] = "";
                     }
                 }else{
-                    $_SESSION["authError"] = "user not found";
+                    $_SESSION["authError"] = "employeelist not found";
                 }
             }else{
                 $_SESSION["authError"] = "login or password is empty";
@@ -69,10 +69,6 @@ class IndexController extends BaseController{
             $this->render('login');
             exit();
         }
-    }
-
-    public function employers(){
-        echo 'employers';
     }
 
     public function bookit(){

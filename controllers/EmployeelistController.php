@@ -3,49 +3,34 @@ class EmployeelistController extends BaseController{
 
     public function index(){
 
-        $Employeelist = Employeelist::model()->findAll();            
-        $this->render("index", ["Employeelist"=> $Employeelist]);
+        $users = User::model()->findAll();
+        $this->render("index", ["users"=> $users]);
 
     }
 
     public function update() {
-        if(isset($_POST['submit'])){     
-            $Employeelist = Employeelist::model()->find($_POST['hidden']); 
-            $Employeelist->users_name = $_POST['users'];
-            $Employeelist->save();
-            //print_r($Employeelist);
-            header('Location: index.php?c=employeelist');
-        }
-        $editId = (isset($_GET['users_id'])) ? $_GET['users_id'] : 0;
-        $edits = new Employeelist();
-        $Employeelist = $edits->find($editId);
-        $result = [];
+        $user = Employeelist::model()->find($_GET['users_id']);
+        print_r($user);
 
-        foreach ($Employeelist as $list => $value){
-            $result[$list] = $value;
-
-        }
-
-        $this->render("update", ["employeelist"=> $result]); 
     }
 
-    public function delete() {
-
+    public function remove() {
         if(isset($_GET['users_id'])){
-            $author = Employeelist::model()->find($_GET['users_id']); 
-            $author->delete();
+            $users = Employeelist::model()->find($_GET['users_id']);
+            $users->delete();
         }
-        header('Location: index.php?c=employeelist');
+        header('Location: index.php?c=employeelist&a=index');
 
     }
 
     public function create() {
 
-        if(isset($_POST['submit'])){ 
-            $employeelist = new Employeelist();
-            $employeelist->users_name = $_POST['users'];
-            $author->save();
-            header('Location: index.php?c=employeelist');
+        if(isset($_POST['submit'])){
+            $users = new User();
+            $users->users_name = $_POST['author'];
+            $users->save();
+            header('Location: index.php?c=index');
         }
         $this->render("create", []);
     }
+}

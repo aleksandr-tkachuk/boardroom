@@ -279,7 +279,7 @@ INSERT INTO `orders` (`orders_data`, `orders_client_id`, `orders_cost`, `orders_
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `user`
+-- Структура таблицы `employeelist`
 --
 
 DROP TABLE IF EXISTS `user`;
@@ -293,12 +293,12 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Очистить таблицу перед добавлением данных `user`
+-- Очистить таблицу перед добавлением данных `employeelist`
 --
 
 TRUNCATE TABLE `user`;
 --
--- Дамп данных таблицы `user`
+-- Дамп данных таблицы `employeelist`
 --
 
 INSERT INTO `user` (`id`, `login`, `password`, `name`, `token`, `discount`) VALUES
@@ -362,7 +362,7 @@ ALTER TABLE `orders`
   ADD PRIMARY KEY (`orders_id`);
 
 --
--- Индексы таблицы `user`
+-- Индексы таблицы `employeelist`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
@@ -397,7 +397,7 @@ ALTER TABLE `genre`
 ALTER TABLE `orders`
   MODIFY `orders_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
--- AUTO_INCREMENT для таблицы `user`
+-- AUTO_INCREMENT для таблицы `employeelist`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;

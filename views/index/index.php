@@ -62,7 +62,7 @@
         <div id="menuDiv">
             <a href="index.php?c=index&a=bookit">Book It</a>&nbsp;&nbsp;
             <? if (App::checkAdmin()) { ?>
-                <a href="index.php?c=index&a=employers">Employee List</a>
+                <a href="index.php?c=employeelist&a=index">Employee List</a>
             <? } ?>
         </div>
     </div>

@@ -10,9 +10,12 @@ $config = [
 		"mysql" => [
 			"driver" => "mysql",
 			"host" => "localhost",
-			"username" => "user13",
+/*			"username" => "user13",
 			"password" => "tuser13",
-			"dbname" => "user13",
+			"dbname" => "user13",*/
+            "username" => "root",
+            "password" => "123456",
+            "dbname" => "boardroom",
 			"charset" => "utf8"
 		],
 		"postgre" => [
