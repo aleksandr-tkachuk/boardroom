@@ -127,7 +127,7 @@ abstract class Models{
             }
         }
         $sql = $sql." ($fields) values ($values)";
-       //echo $sql;
+        //echo $sql;
         //print_r($sqlValues);
         $sth = $this->db->prepare($sql);
         $result = $sth->execute($sqlValues);

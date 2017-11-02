@@ -33,10 +33,16 @@ class EmployeelistController extends BaseController{
 
         if(isset($_POST['submit'])){
             $users = new User();
-            $users->users_name = $_POST['author'];
+            $users->users_name = $_POST['name'];
+            $users->users_login = $_POST['login'];
+            $users->users_password = $_POST['password'];
+            $users->users_role = $_POST['role'];
+
+           // var_dump($users);
             $users->save();
-            header('Location: index.php?c=index');
+            header('Location: index.php?c=employeelist&a=index');
         }
         $this->render("create", []);
     }
+
 }

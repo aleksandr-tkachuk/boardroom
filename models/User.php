@@ -1,6 +1,12 @@
 <?php
 class User extends Models{
 
+    public $users_id = 0;
+    public $users_login;
+    public $users_password;
+    public $users_name;
+    public $users_role;
+
     public function getTableName(){
         return "users";
     }
@@ -27,4 +33,5 @@ class User extends Models{
         }
 
     }
+
 }
