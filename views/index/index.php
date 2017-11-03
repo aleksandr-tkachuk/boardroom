@@ -6,11 +6,11 @@
             Boardroom Booker
         </div>
     </div>
-    <div id="mainFrameDiv">
+    <div id="mainFrameDiv" class="container">
         <div id="contentDiv">
-            <div id="roomNavigationMenu">
+            <div class="btn-group btn-group-justified">
                 <? foreach ($rooms as $room) { ?>
-                    <a href="index.php?room=<?=$room['rooms_id'] ?>"><?=$room['rooms_name'] ?></a>&nbsp;&nbsp;
+                    <a href="index.php?room=<?=$room['rooms_id'] ?>" class="btn btn-primary" style='width: 100%'><?=$room['rooms_name'] ?></a>&nbsp;&nbsp;
                 <? } ?>
             </div>
             <div id="timeNavigationMenu">
@@ -20,7 +20,7 @@
                 <a id="nextMonth" href="?c=index&a=index&d=<?= $d ?>&go=next">></a>
             </div>
             <div id="calendarDiv">
-                <table id="calendarTable" border="1">
+                <table class="table table-bordered" >
                     <tr>
                         <th>Sunday</th>
                         <th>Monday</th>
