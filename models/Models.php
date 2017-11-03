@@ -131,7 +131,7 @@ abstract class Models{
         //print_r($sqlValues);
         $sth = $this->db->prepare($sql);
         $result = $sth->execute($sqlValues);
-        //print_r($sth);
+        //print_r($sth->errorInfo());
         //$this->id = $this->db->lastId();
         $this->find($this->db->lastId());
         return $result;

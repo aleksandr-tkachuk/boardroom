@@ -24,13 +24,31 @@ class IndexController extends BaseController{
 
         $rooms = Rooms::model()->findAll();
 
+        $events = Bookit::model()->findAll(
+            [
+                "events_start >=" => date("Y-m-01 00:00:00", $currentTimeStamp),
+                "events_end <=" => date("Y-m-".$allDays." 00:00:00", $currentTimeStamp)
+            ],
+            [
+                "events_start" => "asc"
+            ]
+        );
+
+        $eventsArray = [];
+        foreach($events as $event){
+            $day = date("j", strtotime($event["events_start"]));
+            $eventsArray[$day][] = $event;
+        }
+        //print_r($eventsArray);
+
         $params = array(
             "d" => $d,
             "currMonth" => $m,
             "currYear" => $y,
             "allDays" => $allDays,
             "firstDay" => $firstDay,
-            "rooms" => $rooms
+            "rooms" => $rooms,
+            "events" => $eventsArray
         );
         $this->render('index', $params);
     }

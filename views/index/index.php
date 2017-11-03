@@ -20,7 +20,7 @@
                 <a id="nextMonth" href="?c=index&a=index&d=<?= $d ?>&go=next">></a>
             </div>
             <div id="calendarDiv">
-                <table id="calendarTable">
+                <table id="calendarTable" border="1">
                     <tr>
                         <th>Sunday</th>
                         <th>Monday</th>
@@ -48,7 +48,14 @@
                             <?
                         } else {
                             ?>
-                            <td><?= $i ?></td>
+                            <td>
+                                <?= $i ?><br>
+                                <?if(isset($events[$i])){
+                                    foreach ($events[$i] as $event){
+                                        echo '<a href="" >'.date("H:i", strtotime($event["events_start"])).' - '.date("H:i", strtotime($event["events_end"])).' '.$event["events_description"].'</a><br>';
+                                    }
+                                }?>
+                            </td>
                             <?
                             $i++;
                         }
