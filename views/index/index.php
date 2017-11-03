@@ -11,7 +11,6 @@
             <div id="roomNavigationMenu">
                 <? foreach ($rooms as $room) { ?>
                     <a href="index.php?room=<?=$room['rooms_id'] ?>"><?=$room['rooms_name'] ?></a>&nbsp;&nbsp;
-}
                 <? } ?>
             </div>
             <div id="timeNavigationMenu">
