@@ -1,7 +1,7 @@
 @import "bourbon";
 
 body {
-background: #eee !important;    
+background: #eee !important;  }
 }
 
 .wrapper {  
@@ -48,4 +48,6 @@ padding: 10px;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
+
 }
+

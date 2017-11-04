@@ -1,14 +1,16 @@
 <?php
 class EmployeelistController extends BaseController{
 
-    public function index(){
 
+    public function index(){
+        $this->showBackButton = true;
         $users = User::model()->findAll();
         $this->render("index", ["users"=> $users]);
 
     }
 
     public function update() {
+        $this->showBackButton = true;
         if(isset($_POST['submit'])){  
             $user = Employeelist::model()->find($_POST['hidden']); 
             $user->users_name = $_POST['user'];
@@ -30,12 +32,12 @@ class EmployeelistController extends BaseController{
     }
 
     public function create() {
-
+        $this->showBackButton = true;
         if(isset($_POST['submit'])){
             $users = new User();
             $users->users_name = $_POST['name'];
             $users->users_login = $_POST['login'];
-            $users->users_password = $_POST['password'];
+            $users->users_password = md5($_POST['password']);
             $users->users_role = $_POST['role'];
 
            // var_dump($users);

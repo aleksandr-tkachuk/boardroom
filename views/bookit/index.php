@@ -1,5 +1,5 @@
 <h2>Boardroom Booker</h2>
-<form action="index.php?c=bookit&a=index" method="post">
+<form action="index.php?c=bookit&a=index&room=<?=$form["room"]?>" method="post">
     <div id="errors">
         <?if(sizeof($form["errors"]) > 0){
             echo "Errors:<br>";

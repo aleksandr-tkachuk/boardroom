@@ -15,6 +15,8 @@ class IndexController extends BaseController{
             }
         }
 
+        $currentRoom = (!isset($_GET["room"])) ? 1 : $_GET["room"];
+
         $currentTimeStamp = (isset($_GET["d"])) ? strtotime("first day of".$d." month") : strtotime("now");
         $m = date("F", $currentTimeStamp);
         $y = date("Y", $currentTimeStamp);
@@ -26,6 +28,7 @@ class IndexController extends BaseController{
 
         $events = Bookit::model()->findAll(
             [
+                "events_room =" => $currentRoom,
                 "events_start >=" => date("Y-m-01 00:00:00", $currentTimeStamp),
                 "events_end <=" => date("Y-m-".$allDays." 00:00:00", $currentTimeStamp)
             ],
@@ -41,14 +44,24 @@ class IndexController extends BaseController{
         }
         //print_r($eventsArray);
 
+        $eventCreateSuccess = (isset($_SESSION["formMessages"])) ? $_SESSION["formMessages"] : "";
+        $eventCreateError = (isset($_SESSION["formErrorMessages"])) ? $_SESSION["formErrorMessages"] : "";
+        unset($_SESSION["formMessages"]);
+        unset($_SESSION["formErrorMessages"]);
+
         $params = array(
+            "currentRoom" => $currentRoom,
+            "currentUser" => $_SESSION['userId'],
+            "currentRole" => $_SESSION["userRole"],
             "d" => $d,
             "currMonth" => $m,
             "currYear" => $y,
             "allDays" => $allDays,
             "firstDay" => $firstDay,
             "rooms" => $rooms,
-            "events" => $eventsArray
+            "events" => $eventsArray,
+            "eventCreateSuccess" => $eventCreateSuccess,
+            "eventCreateError" => $eventCreateError,
         );
         $this->render('index', $params);
     }
@@ -61,6 +74,7 @@ class IndexController extends BaseController{
 
     /*/ action auth /*/
     public function auth(){
+        //print_r($_POST);
         if(sizeof($_POST) != 0){
             if($_POST["login"] != "" && $_POST["password"] != ""){
                 $user = User::model()->findByLogin($_POST["login"]);
@@ -91,9 +105,6 @@ class IndexController extends BaseController{
         }
     }
 
-    public function bookit(){
-        echo 'bookit';    
-    }
 
 }
 

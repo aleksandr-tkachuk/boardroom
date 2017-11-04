@@ -11,6 +11,7 @@ class Bookit extends Models{
     public $events_duration;
     public $events_parent;
     public $events_position;
+    public $events_room;
 
 
     public function getTableName(){
@@ -56,6 +57,33 @@ class Bookit extends Models{
         $sth = $this->db->prepare($sql);
         $sth->execute($dbParams);
         return $sth->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+
+    public static function checkColision($newBookit){
+        $start = $newBookit["startdatetime"];
+        $end = $newBookit["enddatetime"];
+        $room = $newBookit["room"];
+
+        $sql = "select * from ".self::model()->getTableName() ."
+            where 
+            (
+                ( events_start <= '" . $start . "' and events_end >= '" . $end . "' )
+                or
+                ( events_start >= '" . $start . "' and events_end <= '" . $end . "' )
+                or
+                ( events_start >= '" . $start . "' and events_end >= '" . $end . "' and events_start <= '" . $end . "' )
+                or
+                ( events_start <= '" . $start . "' and events_end <= '" . $end . "' and events_end >= '" . $start . "' )
+            )
+            and events_room = ".$room."
+        ";
+
+        $sth = self::model()->db->prepare($sql);
+        $sth->execute([]);
+        $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+        return (sizeof($result) == 0) ? false : true;
 
     }
 

@@ -3,6 +3,8 @@
 /* базовый контролеер */
 abstract class BaseController{
 
+    protected $showBackButton = false;
+
     public function __construct(){
         $c = (isset($_GET["c"])) ? $_GET["c"] : "index";
         $a = (isset($_GET["a"])) ? $_GET["a"] : "index";
@@ -37,6 +39,8 @@ abstract class BaseController{
         foreach($keys as $name){
             $$name = $params[$name];
         }
+
+        $showBackButton = $this->showBackButton;
 
         $controller = strtolower(str_replace("Controller", "", get_class($this)));
         if(file_exists(BASE_PASS."/views/$controller/".$view.".php")){

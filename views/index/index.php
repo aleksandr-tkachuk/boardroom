@@ -1,26 +1,33 @@
-<div id="roomsDiv">
-</div>
 <div id="mainDiv">
-    <div id="titlesDiv">
+    <div class="container-fluid">
         <div id="pageTitleDiv">
             Boardroom Booker
         </div>
     </div>
     <div id="mainFrameDiv" class="container">
+        <div>
+            <?if($eventCreateSuccess != ""){?>
+            <div class="alert alert-success" role="alert"><?=$eventCreateSuccess?></div>
+            <?}?>
+            <?if($eventCreateError != ""){?>
+            <div class="alert alert-danger" role="alert"><?=$eventCreateError?></div>
+            <?}?>
+        </div>
         <div id="contentDiv">
             <div class="btn-group btn-group-justified">
                 <? foreach ($rooms as $room) { ?>
-                    <a href="index.php?room=<?=$room['rooms_id'] ?>" class="btn btn-primary" style='width: 100%'><?=$room['rooms_name'] ?></a>&nbsp;&nbsp;
+                    <a href="index.php?room=<?= $room['rooms_id'] ?>" class="btn btn-primary <?=($room['rooms_id'] ==$currentRoom) ? "active" : ""?>"
+                       style='width: 100%'><?= $room['rooms_name'] ?></a>&nbsp;&nbsp;
                 <? } ?>
             </div>
             <div id="timeNavigationMenu">
-                <a id="previousMonth" href="?c=index&a=index&d=<?= $d ?>&go=prev"><</a>
-                <?= $currMonth ?>
-                <?= $currYear ?>
-                <a id="nextMonth" href="?c=index&a=index&d=<?= $d ?>&go=next">></a>
+                <a id="previousMonth" href="?c=index&a=index&d=<?= $d ?>&go=prev" class="btn btn-default"><</a>
+                <label><?= $currMonth ?>
+                <?= $currYear ?></label>
+                <a id="nextMonth" href="?c=index&a=index&d=<?= $d ?>&go=next" class="btn btn-default">></a>
             </div>
             <div id="calendarDiv">
-                <table class="table table-bordered" >
+                <table class="table table-bordered">
                     <tr>
                         <th>Sunday</th>
                         <th>Monday</th>
@@ -50,11 +57,16 @@
                             ?>
                             <td>
                                 <?= $i ?><br>
-                                <?if(isset($events[$i])){
-                                    foreach ($events[$i] as $event){
-                                        echo '<a href="" >'.date("H:i", strtotime($event["events_start"])).' - '.date("H:i", strtotime($event["events_end"])).' '.$event["events_description"].'</a><br>';
+                                <?
+                                if (isset($events[$i])) {
+                                    foreach ($events[$i] as $event) {
+                                        if($currentUser == $event["events_employer"] || $currentRole == 1){
+                                            echo '<a href="" >' . date("H:i", strtotime($event["events_start"])) . ' - ' . date("H:i", strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
+                                        }else{
+                                            echo '<span>' . date("H:i", strtotime($event["events_start"])) . ' - ' . date("H:i", strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</span><br>';
+                                        }
                                     }
-                                }?>
+                                } ?>
                             </td>
                             <?
                             $i++;
@@ -67,10 +79,14 @@
             </div>
         </div>
         <div id="menuDiv">
-            <a href="index.php?c=bookit&a=index">Book It</a>&nbsp;&nbsp;
+            <a href="index.php?c=bookit&a=index&room=<?=$currentRoom?>">Book It</a>&nbsp;&nbsp;
             <? if (App::checkAdmin()) { ?>
                 <a href="index.php?c=employeelist&a=index">Employee List</a>
             <? } ?>
         </div>
     </div>
 </div>
+<style>
+    a {color: #08088A;}
+    a:hover {color: #0B610B;}
+</style>
