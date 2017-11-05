@@ -128,7 +128,6 @@ class BookitController extends BaseController{
         $bookit->events_parent = $params["parent"];
         $bookit->events_position = $params["position"];
         $bookit->events_room = $params["room"];
-
         if($bookit->save()){
             return $bookit->events_id;
         }else{

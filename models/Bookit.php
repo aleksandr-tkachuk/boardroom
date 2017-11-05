@@ -78,7 +78,7 @@ class Bookit extends Models{
             )
             and events_room = ".$room."
         ";
-
+//echo $sql;
         $sth = self::model()->db->prepare($sql);
         $sth->execute([]);
         $result = $sth->fetchAll(PDO::FETCH_ASSOC);

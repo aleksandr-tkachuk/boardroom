@@ -9,6 +9,11 @@
     <link href="./css/bootstrap.min" rel="stylesheet">
     <link href="./css/bootstrap-theme.min" rel="stylesheet">
     <link href=."/css/bootstrap-theme.min.css.map" rel="stylesheet">
+    <script src="http://java2s.com/style/jquery-1.8.0.min.js"></script>
+    <script src="http://java2s.com/style/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.css"></script>
+
 </head>
 <body>
 <div id="wrapperDiv">
