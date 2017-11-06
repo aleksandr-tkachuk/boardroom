@@ -66,6 +66,21 @@ class IndexController extends BaseController{
         $this->render('index', $params);
     }
 
+    public function detail(){
+        if(isset($_POST["eventId"]) && $_POST["eventId"] != ""){
+            $event = Bookit::model()->find($_POST["eventId"]);
+            $event->employerName = Employeelist::model()->find($event->events_employer)->users_name;
+            echo json_encode([
+                "status" => "ok",
+                "data" => $event
+            ]);
+        }else{
+            echo json_encode([
+                "status" => "error",
+                "message" => "Bad Request: event id is empty"
+            ]);
+        }
+    }
     /* action logout */
     public function logout(){
         unset($_SESSION["auth"]);

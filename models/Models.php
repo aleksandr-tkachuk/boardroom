@@ -79,7 +79,7 @@ abstract class Models{
     public function save(){
         $id = $this->getTableName()."_id";
         if(!empty($this->$id)){
-            $this->update();
+            return $this->update();
         }else{
             return $this->insert();
         }
@@ -105,7 +105,9 @@ abstract class Models{
         }
         $id = $this->getTableName()."_id";
         $sql .= $fields." where ".$this->getTableName()."_id=".$this->$id;
+        //echo $sql;
         $this->db->sqlQuery($sql);
+        return true;
     }
 
     private function insert(){

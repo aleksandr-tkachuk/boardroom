@@ -60,7 +60,7 @@ class Bookit extends Models{
 
     }
 
-    public static function checkColision($newBookit){
+    public static function checkColision($newBookit, $action = 'add'){
         $start = $newBookit["startdatetime"];
         $end = $newBookit["enddatetime"];
         $room = $newBookit["room"];
@@ -78,6 +78,9 @@ class Bookit extends Models{
             )
             and events_room = ".$room."
         ";
+        if($action == 'update'){
+            $sql .= ' and events_id != '.$newBookit["id"];
+        }
 //echo $sql;
         $sth = self::model()->db->prepare($sql);
         $sth->execute([]);

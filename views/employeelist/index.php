@@ -18,8 +18,8 @@
                 <div class="row">
                     <div class="col-12-xs text-center">
                         <form method="post" action="index.php?c=employeelist&a=remove">
-                            <button class="btn btn-success btn-md" >Yes</button>
-                            <button class="btn btn-danger btn-md" >No</button>
+                            <button class="btn btn-success btn-md" id="yes">Yes</button>
+                            <button class="btn btn-danger btn-md" id="no">No</button>
                         </form>
                     </div>
                 </div>
@@ -76,5 +76,6 @@
             $('[title]').tooltip();
         });
     });
+
 </script>
 

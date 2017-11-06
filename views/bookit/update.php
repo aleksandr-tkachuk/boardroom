@@ -1,5 +1,6 @@
 <h2>Boardroom Booker</h2>
-<form action="index.php?c=bookit&a=index&room=<?=$form["room"]?>" method="post">
+<form action="index.php?c=bookit&a=update&id=<?=$form["id"]?>&room=<?=$form["room"]?>" method="post">
+    <input type="hidden" name="id" value="<?=$form["id"]?>">
     <div id="errors">
         <?if(sizeof($form["errors"]) > 0){
             echo "Errors:<br>";
@@ -9,7 +10,7 @@
         }?>
         <br>
     </div>
-    <h3>New Event</h3>
+    <h3>Update Event</h3>
     1.Booked for:<br>
     <select name="user">
         <? if($user->users_name == 'Admin'){
@@ -21,7 +22,7 @@
         <? } ?>
     </select><br><br>
     2.I would like to book this meeting:<br>
-    <input type=date min=<?=$form["date"]?> name="date" value="<?=$form["date"]?>"><br>
+    <input type=date min=<?=date("Y-m-d", strtotime("now"))?> name="date" value="<?=$form["date"]?>"><br>
     3.Specify what the time and of the meeting(This will be what peopel see on the calendar.) <br>
     <label>Start: </label><input type=time step=1800 name="start" value="<?=$form["start"]?>"> - 30m increments<br>
     <label>End: </label><input type=time step=1800 name="end" value="<?=$form["end"]?>"> - 30m increments<br>
@@ -38,7 +39,9 @@
         the number of months.(If you choose "bi-weekly" and put in an add number of weeks, the computer will round down.)<br>
         <input type="text" name="duration" value="<?=$form["duration"]?>"><label>duration(max 4 weeks)</label><br>
     <br><br>
-
+    <?if($form["recurring"] == 1){?>
+        <input type="checkbox" name="btnApplyAll"><label>Apply to all occurrences?</label>
+    <?}?>
     <p><input type="submit"></p>
 </form>
 <?php

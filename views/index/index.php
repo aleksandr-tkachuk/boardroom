@@ -1,3 +1,12 @@
+<style>
+    a {
+        color: #08088A;
+    }
+
+    a:hover {
+        color: #0B610B;
+    }
+</style>
 <div id="mainDiv">
     <div class="container-fluid">
         <div id="pageTitleDiv">
@@ -62,7 +71,7 @@
                                 if (isset($events[$i])) {
                                     foreach ($events[$i] as $event) {
                                         if ($currentUser == $event["events_employer"] || $currentRole == 1) {
-                                            echo '<a href="#myModal" data-toggle="modal">' . date("H:i", strtotime($event["events_start"])) . ' - ' . date("H:i", strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
+                                            echo '<a href="javascript: void(0);" data-id="'.$event['events_id'].'" data-type="btnShowDetail">' . date("H:i", strtotime($event["events_start"])) . ' - ' . date("H:i", strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
                                         } else {
                                             echo '<span>' . date("H:i", strtotime($event["events_start"])) . ' - ' . date("H:i", strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</span><br>';
                                         }
@@ -89,8 +98,7 @@
 </div>
 <div id="myModal" class="modal fade in" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="false"
-     style="display: hide;">
-    <?php var_dump($_SESSION)?>
+     style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -100,11 +108,7 @@
             <div class="modal-body">
                 <h4>Text in a details boardroom</h4>
                 <div class="table-responsive">
-                <table  class="table table-bordered table-striped"
-                        data-toggle="table"
-                        data-url="index.php"
-                        data-cache="false"
-                        data-height="299">
+                <table class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th colspan="3" style="text-align: center">Submitted</th>
@@ -113,16 +117,16 @@
                     <tbody>
                     <tr>
                         <th scope="row">When:</th>
-                        <td data-field="time">time start</td>
-                        <td data-field="time">time end</td>
+                        <td id="timeStart"></td>
+                        <td id="timeEnd"></td>
                     </tr>
                     <tr>
                         <th scope="row">Notes:</th>
-                        <td colspan="2" style="text-align: center" data-field="description" >Meeting</td>
+                        <td colspan="2" style="text-align: center" id="description" ></td>
                     </tr>
                     <tr>
                         <th scope="row">Who:</th>
-                        <td colspan="2" style="text-align: center" data-field="name" >User</td>
+                        <td colspan="2" style="text-align: center" id="user" ></td>
                     </tr>
                     </tbody>
                 </table
@@ -130,18 +134,49 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">UPDATE</button>
-                <button type="button" class="btn btn-danger">DELETE</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate">UPDATE</button>
+                <button type="button" class="btn btn-danger" id="btnDelete">DELETE</button>
             </div>
         </div>
     </div>
 </div>
-<style>
-    a {
-        color: #08088A;
-    }
 
-    a:hover {
-        color: #0B610B;
-    }
-</style>
+<script>
+    $("a[data-type=btnShowDetail]").on("click", function(){
+        var eventId = $(this).attr("data-id");
+        console.log("open detail", eventId);
+
+        $.ajax({
+            type: "POST",
+            url: "index.php?c=index&a=detail",
+            data: {
+                "eventId": eventId
+            },
+            success: function(response){
+                if(response.status == 'ok'){
+                    $("#timeStart").text(response.data.events_start);
+                    $("#timeEnd").text(response.data.events_end);
+                    $("#user").text(response.data.employerName);
+                    $("#description").text(response.data.events_description);
+                    $("#btnUpdate").attr("data-id", response.data.events_id);
+                    $("#btnDelete").attr("data-id", response.data.events_id);
+                    $("#myModal").modal("show");
+
+                    $("#btnUpdate").unbind("click").bind("click", function(){
+                        var eventId = $(this).attr("data-id");
+                        $(location).attr('href', 'index.php?c=bookit&a=update&id='+eventId);
+                    });
+                    $("#btnDelete").unbind("click").bind("click", function(){
+                        var eventId = $(this).attr("data-id");
+                        $(location).attr('href', 'index.php?c=bookit&a=delete&id='+eventId);
+
+                    });
+                }else{
+                    alert(response.message);
+                }
+            },
+            dataType: "json"
+        });
+
+    });
+</script>
