@@ -8,10 +8,8 @@
     }
 </style>
 <div id="mainDiv">
-    <div class="container-fluid">
-        <div id="pageTitleDiv">
+    <div class="container navbar-brand" style="text-align: center; color: #2b669a ">
             Boardroom Booker
-        </div>
     </div>
     <div id="mainFrameDiv" class="container">
         <div>
@@ -89,9 +87,9 @@
             </div>
         </div>
         <div id="menuDiv">
-            <a href="index.php?c=bookit&a=index&room=<?= $currentRoom ?>">Book It</a>&nbsp;&nbsp;
+            <a href="index.php?c=bookit&a=index&room=<?= $currentRoom ?>" class="btn btn-default" style="color: #2b669a">Book It</a>&nbsp;&nbsp;
             <? if (App::checkAdmin()) { ?>
-                <a href="index.php?c=employeelist&a=index">Employee List</a>
+                <a href="index.php?c=employeelist&a=index" class="btn btn-default" style="color: #2b669a">Employee List</a>
             <? } ?>
         </div>
     </div>

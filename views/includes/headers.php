@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>Boardroom Booker</title>
 
     <!-- Bootstrap -->
@@ -14,8 +14,8 @@
 </head>
 <body>
 <div id="wrapperDiv">
-    <?php if(isset($_SESSION["auth"]) && $_SESSION["auth"]){?>
-    <div id="hello">Hello, <?php echo $_SESSION["authName"];?>
-        &nbsp;&nbsp;<a href="index.php?c=index&a=logout">Logout</a>
-    </div>
-<?php }?>
+    <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"]) { ?>
+        <h4>Hello, <?php echo $_SESSION["authName"]; ?>
+            <a href="index.php?c=index&a=logout" class="btn btn-default" style="color: #2aabd2">Logout</a>
+        </h4>
+    <?php } ?>

@@ -25,6 +25,7 @@ class EmployeelistController extends BaseController{
     public function remove() {
         if(isset($_GET['users_id'])){
             $users = Employeelist::model()->find($_GET['users_id']);
+           // print_r($users);
             $users->delete();
         }
         header('Location: index.php?c=employeelist&a=index');
