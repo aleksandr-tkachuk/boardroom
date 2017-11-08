@@ -141,7 +141,7 @@ abstract class Models{
     
     public function delete() {
         $sql = $this->db->prepare("DELETE FROM ".$this->getTableName()." where ".$this->getTableName()."_id = ?");
-		
+//echo $sql;
         $sql->execute(array($this->{$this->getTableName() . '_id'}));
     }
 

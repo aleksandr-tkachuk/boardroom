@@ -242,6 +242,14 @@ class BookitController extends BaseController{
         }
     }
 
+    public function delete() {
+        if(isset($_GET['events_id'])){
+            $event = Bookit::model()->find($_GET['events_id']);
+            $event->delete();
+        }
+        header('Location: index.php?c=index');
+
+    }
 
     private function createBookit($params, $action){
         if($action == 'add') {

@@ -41,7 +41,7 @@ class EmployeelistController extends BaseController{
             $users->users_password = md5($_POST['password']);
             $users->users_role = $_POST['role'];
 
-           // var_dump($users);
+            //var_dump($users);
             $users->save();
             header('Location: index.php?c=employeelist&a=index');
         }

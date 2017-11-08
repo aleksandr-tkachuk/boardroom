@@ -34,6 +34,7 @@
                     <?= $currYear ?></label>
                 <a id="nextMonth" href="?c=index&a=index&d=<?= $d ?>&go=next" class="btn btn-default">></a>
             </div>
+
             <div id="calendarDiv">
                 <table class="table table-bordered">
                     <tr>
@@ -166,7 +167,7 @@
                     });
                     $("#btnDelete").unbind("click").bind("click", function(){
                         var eventId = $(this).attr("data-id");
-                        $(location).attr('href', 'index.php?c=bookit&a=delete&id='+eventId);
+                        $(location).attr('href', 'index.php?c=bookit&a=delete&events_id='+eventId);
 
                     });
                 }else{

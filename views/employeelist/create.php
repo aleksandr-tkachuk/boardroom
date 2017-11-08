@@ -27,12 +27,12 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        <div class="form-group">
-            <label for="inputRole" class="col-lg-2 control-label">Role</label>
-            <div class="col-lg-3">
-                <input type="text" class="form-control" required="required"
-                       name='role' placeholder="Role">
-            </div>
+        <div class="form-group" >
+            <label class="col-lg-2 control-label"><input type="radio" name='role' value="0">Admin</label>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group checked">
+            <label class="col-lg-2 control-label"><input type="radio" name='role' value="1" checked>User</label>
         </div>
         <div class="clearfix"></div>
         <div class="form-group">
