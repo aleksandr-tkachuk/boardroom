@@ -29,10 +29,10 @@
                 <? } ?>
             </div>
             <div id="timeNavigationMenu">
-                <a id="previousMonth" href="?c=index&a=index&d=<?= $d ?>&go=prev" class="btn btn-default"><</a>
+                <a id="previousMonth" href="?c=index&a=index&room=<?= $currentRoom?>&d=<?= $d ?>&go=prev" class="btn btn-default"><</a>
                 <label><?= $currMonth ?>
                     <?= $currYear ?></label>
-                <a id="nextMonth" href="?c=index&a=index&d=<?= $d ?>&go=next" class="btn btn-default">></a>
+                <a id="nextMonth" href="?c=index&a=index&room=<?= $currentRoom?>&d=<?= $d ?>&go=next" class="btn btn-default">></a>
             </div>
 
             <div id="calendarDiv">
@@ -110,7 +110,7 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th colspan="3" style="text-align: center">Submitted</th>
+                        <th colspan="3" style="text-align: center">Submitted <span id="date_created"></span></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -140,10 +140,31 @@
     </div>
 </div>
 
+<div id="confirmModal" class="modal fade in" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="false"
+     style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning" role="alert">
+                Delete only this event or this and all next?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnYes">Only this</button>
+                <button type="button" class="btn btn-danger" id="btnNo">All next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $("a[data-type=btnShowDetail]").on("click", function(){
         var eventId = $(this).attr("data-id");
-        console.log("open detail", eventId);
+        //console.log("open detail", eventId);
 
         $.ajax({
             type: "POST",
@@ -159,6 +180,7 @@
                     $("#description").text(response.data.events_description);
                     $("#btnUpdate").attr("data-id", response.data.events_id);
                     $("#btnDelete").attr("data-id", response.data.events_id);
+                    $("#date_created").text(response.data.events_created);
                     $("#myModal").modal("show");
 
                     $("#btnUpdate").unbind("click").bind("click", function(){
@@ -167,7 +189,16 @@
                     });
                     $("#btnDelete").unbind("click").bind("click", function(){
                         var eventId = $(this).attr("data-id");
-                        $(location).attr('href', 'index.php?c=bookit&a=delete&events_id='+eventId);
+
+                        $("#confirmModal").modal("show");
+
+                        $("#btnYes").unbind("click").bind("click", function(){
+                            $(location).attr('href', 'index.php?c=bookit&a=delete&events_id='+eventId);
+                        });
+                        $("#btnNo").unbind("click").bind("click", function(){
+                            $(location).attr('href', 'index.php?c=bookit&a=delete&events_id='+eventId+'&all_next');
+                        });
+
 
                     });
                 }else{

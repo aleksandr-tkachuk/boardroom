@@ -54,14 +54,17 @@ class BookitController extends BaseController{
     }
 
     private function checkBookit($form, $currentRoom, $action = 'add'){
+        //print_r($form);exit();
         $colision = Bookit::checkColision($form, $action);
 
         if(!$colision) {
             $eventId = $this->createBookit($form, $action);
 
             $eventsRecurring = Bookit::model()->findAll(["events_parent =" => $eventId]);
+//            echo $eventId;
+//            print_r($eventsRecurring);
             if($action == 'update' && sizeof($eventsRecurring) != 0){
-//print_r($form);exit();
+
                 $applyAll = (isset($form["btnApplyAll"])) ? $form["btnApplyAll"] : "off";
                 if($applyAll == 'on'){
                     foreach ($eventsRecurring as $event){
@@ -203,18 +206,35 @@ class BookitController extends BaseController{
 
             if(sizeof($_POST) != 0){
                 $form = $_POST;
+
                 $event = Bookit::model()->find($form["id"]);
+                $dDays = 0;
+                if($form["date"] != date("Y-m-d", strtotime($event->events_start))){
+//                    echo "!!!";
+                    list($date, $time) = explode(" ", $event->events_start);
+
+                    $dDays = (strtotime($form["date"]." 00:00:00") - strtotime($date." 00:00:00"))/60/60/24;
+//                    echo $dDays;
+
+                }
+
                 $applyAll = (isset($form["btnApplyAll"])) ? $form["btnApplyAll"] : "off";
                 //print_r($event);exit();
                 //echo $event->events_parent ," -- ", $applyAll;
-                if($event->events_parent != 0 && $applyAll == 'on'){
-                    $event = Bookit::model()->find($event->events_parent);
+                if($applyAll == 'on'){
+                    if($event->events_parent != 0) {
+                        $event = Bookit::model()->find($event->events_parent);
+                        $form["date"] = date("Y-m-d", strtotime($dDays." days ".$event->events_start));
+                    }
+
                     $form["position"] = 0;
                 }else{
                     $form["position"] = $event->events_position;
                 }
                 //print_r($event);exit();
                 $form["room"] = $event->events_room;
+                $form["id"] = $event->events_id;
+                $form["parent"] = $event->events_parent;
                 $form["errors"] = [];
 
                 if($form["start"] >= $form["end"]){
@@ -223,9 +243,10 @@ class BookitController extends BaseController{
 
                 $form["startdatetime"] = $form["date"]." ".$form["start"];
                 $form["enddatetime"] = $form["date"]." ".$form["end"];
-                $form["parent"] = $event->events_id;
 
-
+//                print_r($form);
+//                print_r($event);
+//                exit();
                 $this->checkBookit($form, $event->events_room, "update");
             }
             $user = Employeelist::model()->find($_SESSION['userId']);
@@ -243,17 +264,30 @@ class BookitController extends BaseController{
     }
 
     public function delete() {
-        if(isset($_GET['events_id'])){
-            $event = Bookit::model()->find($_GET['events_id']);
-            $event->delete();
+        //print_r($_GET);
+        $deleteAllNext = (isset($_GET["all_next"])) ? true : false;
+
+        if($deleteAllNext){
+//            echo "all";
+            if (isset($_GET['events_id'])) {
+                $room = Bookit::deleteAllNext($_GET['events_id']);
+            }
+        }else {
+//            echo "one";
+            if (isset($_GET['events_id'])) {
+                $event = Bookit::model()->find($_GET['events_id']);
+                $room = $event->events_room;
+                $event->delete();
+            }
         }
-        header('Location: index.php?c=index');
+        header('Location: index.php?c=index&room='.$room);
 
     }
 
     private function createBookit($params, $action){
         if($action == 'add') {
             $bookit = new Bookit();
+            $bookit->events_created = date("Y-m-d H:i:s", strtotime("now"));
         }else{
             $bookit = Bookit::model()->find($params["id"]);
         }

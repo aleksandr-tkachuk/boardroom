@@ -12,6 +12,7 @@ class Bookit extends Models{
     public $events_parent;
     public $events_position;
     public $events_room;
+    public $events_created;
 
 
     public function getTableName(){
@@ -79,9 +80,9 @@ class Bookit extends Models{
             and events_room = ".$room."
         ";
         if($action == 'update'){
-            $sql .= ' and events_id != '.$newBookit["id"];
+            $sql .= ' and events_id != '.$newBookit["id"].' and events_parent != '.$newBookit["id"];
         }
-//echo $sql;
+//echo $sql;exit();
         $sth = self::model()->db->prepare($sql);
         $sth->execute([]);
         $result = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -90,4 +91,18 @@ class Bookit extends Models{
 
     }
 
+    public static function deleteAllNext($eventId){
+        $event = Bookit::model()->find($eventId);
+        $room = $event->events_room;
+        if($event->events_parent == 0){
+            $sql = "delete from " . self::model()->getTableName() . " where events_parent = ".$event->events_id;
+            self::model()->db->sqlQuery($sql);
+        }else {
+            $sql = "delete from " . self::model()->getTableName() . " where events_parent = ".$event->events_parent." and events_position > ".$event->events_position." ";
+            self::model()->db->sqlQuery($sql);
+        }
+
+        $event->delete();
+        return $room;
+    }
 }
