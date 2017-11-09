@@ -30,14 +30,14 @@
         <div class="form-group" >
             <label class="col-lg-2 control-label">Admin</label>
             <div class="col-lg-3">
-                <input type="radio" name='role' value="0">
+                <input type="radio" name='role' value="1">
             </div>
         </div>
         <div class="clearfix"></div>
         <div class="form-group checked">
             <label class="col-lg-2 control-label">User</label>
             <div class="col-lg-3">
-                <input type="radio" name='role' value="1" checked>
+                <input type="radio" name='role' value="0" checked>
             </div>
         </div>
         <div class="clearfix"></div>

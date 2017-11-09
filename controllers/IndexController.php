@@ -62,6 +62,7 @@ class IndexController extends BaseController{
             "events" => $eventsArray,
             "eventCreateSuccess" => $eventCreateSuccess,
             "eventCreateError" => $eventCreateError,
+            "timeFormat" => (isset($_SESSION["timeFormat"])) ? $_SESSION["timeFormat"] : 12
         );
         $this->render('index', $params);
     }
@@ -70,9 +71,11 @@ class IndexController extends BaseController{
         if(isset($_POST["eventId"]) && $_POST["eventId"] != ""){
             $event = Bookit::model()->find($_POST["eventId"]);
             $event->employerName = Employeelist::model()->find($event->events_employer)->users_name;
+
             echo json_encode([
                 "status" => "ok",
-                "data" => $event
+                "data" => $event,
+                "disableAction" => ($event->events_end < date("Y-m-d H:i:s", strtotime("now"))) ? 1 : 0,
             ]);
         }else{
             echo json_encode([
@@ -80,6 +83,15 @@ class IndexController extends BaseController{
                 "message" => "Bad Request: event id is empty"
             ]);
         }
+    }
+
+    public function setTimeFormat(){
+        if(isset($_POST["timeFormat"]) && $_POST["timeFormat"] != ""){
+            $_SESSION["timeFormat"] = $_POST["timeFormat"];
+        }else{
+            $_SESSION["timeFormat"] = 12;
+        }
+        echo json_encode([ "status" => "ok"]);
     }
     /* action logout */
     public function logout(){

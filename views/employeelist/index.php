@@ -1,4 +1,11 @@
 
+<?php
+if($errors != ""){
+?>
+    <div class="alert alert-danger" role="alert">
+<? echo $errors; ?>
+</div>
+<?}?>
 <br><a href="index.php?c=employeelist&a=create" class="btn btn-default" style="color: #4cae4c">Add a new employee</a><br><br>
 <a href="index.php" class="btn btn-lg btn">
     <span class="glyphicon "></span>&laquo; Back

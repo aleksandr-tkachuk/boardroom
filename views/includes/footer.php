@@ -8,4 +8,8 @@
 <input type="button" onclick="history.back(-1); return false;" value="Go back" class="btn btn-info">
 <?}?>
 </body>
+
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/moment.js"></script>
+<script src="./js/bootstrap-datetimepicker.js"></script>
 </html>

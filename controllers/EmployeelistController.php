@@ -5,7 +5,10 @@ class EmployeelistController extends BaseController{
     public function index(){
        // $this->showBackButton = true;
         $users = User::model()->findAll();
-        $this->render("index", ["users"=> $users]);
+        $errorDeleteUser = (isset($_SESSION["errorDeleteUser"])) ? $_SESSION["errorDeleteUser"] : "";
+        unset($_SESSION["errorDeleteUser"]);
+
+        $this->render("index", ["users"=> $users, 'errors' => $errorDeleteUser]);
 
     }
 
@@ -24,11 +27,18 @@ class EmployeelistController extends BaseController{
 
     public function remove() {
         if(isset($_GET['users_id'])){
+            $countAdmins = sizeof(Employeelist::model()->findAll(["users_role" => 1]));
             $users = Employeelist::model()->find($_GET['users_id']);
-           // print_r($users);
-            $users->delete();
+
+            if($countAdmins == 1 && $users->users_role == 1 ){
+                $_SESSION["errorDeleteUser"] = "Can't delete last admin";
+                header('Location: index.php?c=employeelist&a=index');
+            }else {
+                // print_r($users);
+                $users->delete();
+            }
         }
-        header('Location: index.php?c=employeelist&a=index');
+       header('Location: index.php?c=employeelist&a=index');
 
     }
 
@@ -41,7 +51,6 @@ class EmployeelistController extends BaseController{
             $users->users_password = md5($_POST['password']);
             $users->users_role = $_POST['role'];
 
-            //var_dump($users);
             $users->save();
             header('Location: index.php?c=employeelist&a=index');
         }

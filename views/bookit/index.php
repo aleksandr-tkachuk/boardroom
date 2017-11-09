@@ -2,7 +2,7 @@
 background-size:cover;">
     <h2 >Boardroom Booker</h2>
 
-    <form action="index.php?c=bookit&a=index&room=<?= $form["room"] ?>" method="post" class="form-horizontal">
+    <form action="index.php?c=bookit&a=index&room=<?= $form["room"] ?>" id="formCreate" method="post" class="form-horizontal">
         <div id="errors">
             <?
             if (sizeof($form["errors"]) > 0) {
@@ -25,11 +25,36 @@ background-size:cover;">
             <? } ?>
         </select><br><br>
         <p class="text-warning">2.I would like to book this meeting:</p>
-        <input type=date min=<?= $form["date"] ?> name="date" value="<?= $form["date"] ?>"><br>
+<!--        <input type=date min=--><?//= $form["date"] ?><!-- name="date" value="--><?//= $form["date"] ?><!--"><br>-->
+        <input type=hidden name="date" value="">
+        <div class='input-group date' id='date' style="width: 150px;">
+            <input type='text' class="form-control" />
+            <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+        </div>
         <p class="text-warning">3.Specify what the time and of the meeting(This will be what peopel see on the calendar.) </p>
-        <label>Start: </label><input type=time step=1800 name="start" value="<?= $form["start"] ?>"> - 30m
+        <label>Start: </label>
+<!--        <input type=time step=1800 name="start" value="--><?//= $form["start"] ?><!--">-->
+        <input type=hidden name="start" value="">
+        <div class='input-group date' id='start' style="width: 150px;">
+            <input type='text' class="form-control" />
+            <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+        </div>
+        - 30m
         increments<br>
-        <label>End: </label><input type=time step=1800 name="end" value="<?= $form["end"] ?>"> - 30m increments<br>
+        <label>End: </label>
+<!--        <input type=time step=1800 name="end" value="--><?//= $form["end"] ?><!--">-->
+        <input type=hidden name="end" value="">
+        <div class='input-group date' id='end' style="width: 150px;">
+            <input type='text' class="form-control" />
+            <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+        </div>
+        - 30m increments<br>
         <p class="text-warning">4.Enter the specifics for the meeting.(This will be peopel see when they click on an event link.)</p>
         <textarea name="description"><?= $form["description"] ?></textarea><br>
         <p class="text-warning">5.Is this going to be a recurring event?</p>
@@ -51,7 +76,7 @@ background-size:cover;">
         <br><br>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Add event</button>
-            <a href="index.php" class="btn btn-lg btn">
+            <a href="index.php" class="btn btn-primary">
                 <span class="glyphicon "></span>&laquo; Back
             </a
         </div>
@@ -60,6 +85,46 @@ background-size:cover;">
 </div>
 <script>
     $(document).ready(function () {
+        $('#date').datetimepicker({
+            format: 'YYYY-MM-DD',
+            defaultDate: '<?=$dateStartNow?>',
+            minDate: '<?=$dateStartNow?>',
+        });
+
+        $('#start').datetimepicker({
+            format: '<?=($timeFormat == 12) ? 'hh:mm a' : 'HH:mm'?>',
+            stepping: 30,
+            defaultDate: '<?=$dateStartNow?>',
+            disabledTimeIntervals: [
+                [moment().hour(0).minutes(0), moment().hour(7).minutes(59)],
+                [moment().hour(20).minutes(1), moment().hour(24).minutes(0)]
+            ]
+        }).on('dp.change',function(event){
+            var minTime = new Date(event.date.valueOf());
+            minTime.setMinutes(minTime.getMinutes() + 30);
+            $('#end').data("DateTimePicker").minDate(minTime).defaultDate(minTime);
+        });
+
+        $('#end').datetimepicker({
+            format: '<?=($timeFormat == 12) ? 'hh:mm a' : 'HH:mm'?>',
+            stepping: 30,
+            defaultDate: '<?=$dateEndNow?>',
+            disabledTimeIntervals: [
+                [moment().hour(0).minutes(0), moment().hour(7).minutes(59)],
+                [moment().hour(20).minutes(1), moment().hour(24).minutes(0)]
+            ]
+        }).on('dp.show',function(event){
+            var minTime = new Date($("#start").data("DateTimePicker").date());
+            minTime.setMinutes(minTime.getMinutes() + 30);
+            $('#end').data("DateTimePicker").minDate(minTime).defaultDate(minTime);
+        });
+
+        $("#formCreate").on("submit", function(){
+            $("input[name=date]").val($("#date").data("DateTimePicker").date().get().format("YYYY-MM-DD"));
+            $("input[name=start]").val($("#start").data("DateTimePicker").date().get().format("HH:mm"));
+            $("input[name=end]").val($("#end").data("DateTimePicker").date().get().format("HH:mm"));
+        });
+
         $('input[type=radio][name=specify]').change(function (e) {
             $('input[name="duration"]').val('0');
             var maxValue;

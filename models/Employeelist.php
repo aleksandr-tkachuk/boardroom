@@ -3,6 +3,7 @@ class Employeelist extends Models{
 
     public $users_id = 0;
     public $users_name;
+
     public function getTableName(){
         return "users";
     }

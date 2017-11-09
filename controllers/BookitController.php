@@ -11,6 +11,8 @@ class BookitController extends BaseController{
         $users = Employeelist::model()->findAll();
 
         $dateNow = date("Y-m-d", strtotime("now"));
+        $dateTimeStart = date("Y-m-d H:i:s", strtotime("now"));
+        $dateTimeEnd = date("Y-m-d H:i:s", strtotime("+30 minutes"));
         $timeStart = date("H:00", strtotime("+1 hour"));
         $timeEnd = date("H:30", strtotime("+1 hour"));
 
@@ -24,10 +26,11 @@ class BookitController extends BaseController{
             "specify" => 1,
             "duration" => 0,
             "errors" => [],
-            "room" => $currentRoom
+            "room" => $currentRoom,
         ];
 
         if(sizeof($_POST) != 0){
+            //print_r($_POST);exit();
             $form = $_POST;
             $form["room"] = $currentRoom;
             $form["errors"] = [];
@@ -47,8 +50,10 @@ class BookitController extends BaseController{
         $this->render("index", [
             "user"=> $user,
             "users"=>$users,
-            "form" => $form
-
+            "form" => $form,
+            "dateStartNow" => $dateTimeStart,
+            "dateEndNow" => $dateTimeEnd,
+            "timeFormat" => (isset($_SESSION["timeFormat"])) ? $_SESSION["timeFormat"] : 12
         ]);
 
     }

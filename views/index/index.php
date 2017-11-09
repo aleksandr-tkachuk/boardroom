@@ -11,6 +11,14 @@
     <div class="container navbar-brand" style="text-align: center; color: #2b669a ">
             Boardroom Booker
     </div>
+    <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary <?=($timeFormat == 12) ? "active" : ""?>">
+            <input type="radio" name="options" value="12" autocomplete="off" <?=($timeFormat == 12) ? "checked" : ""?>>12
+        </label>
+        <label class="btn btn-primary <?=($timeFormat == 24) ? "active" : ""?>">
+            <input type="radio" name="options" value="24" autocomplete="off" <?=($timeFormat == 24) ? "checked" : ""?>>24
+        </label>
+    </div>
     <div id="mainFrameDiv" class="container">
         <div>
             <? if ($eventCreateSuccess != "") { ?>
@@ -70,9 +78,9 @@
                                 if (isset($events[$i])) {
                                     foreach ($events[$i] as $event) {
                                         if ($currentUser == $event["events_employer"] || $currentRole == 1) {
-                                            echo '<a href="javascript: void(0);" data-id="'.$event['events_id'].'" data-type="btnShowDetail">' . date("H:i", strtotime($event["events_start"])) . ' - ' . date("H:i", strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
+                                            echo '<a href="javascript: void(0);" data-id="'.$event['events_id'].'" data-type="btnShowDetail">' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
                                         } else {
-                                            echo '<span>' . date("H:i", strtotime($event["events_start"])) . ' - ' . date("H:i", strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</span><br>';
+                                            echo '<span>' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</span><br>';
                                         }
                                     }
                                 } ?>
@@ -162,6 +170,21 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        $("input[type=radio]").on("change", function () {
+            $.ajax({
+                type: "POST",
+                url: "index.php?c=index&a=setTimeFormat",
+                data: {
+                    "timeFormat": $(this).val()
+                },
+                success: function(response){
+                    $(location).attr('href', 'index.php');
+                },
+                dataType: "json"
+            });
+        });
+    });
     $("a[data-type=btnShowDetail]").on("click", function(){
         var eventId = $(this).attr("data-id");
         //console.log("open detail", eventId);
@@ -183,24 +206,31 @@
                     $("#date_created").text(response.data.events_created);
                     $("#myModal").modal("show");
 
-                    $("#btnUpdate").unbind("click").bind("click", function(){
-                        var eventId = $(this).attr("data-id");
-                        $(location).attr('href', 'index.php?c=bookit&a=update&id='+eventId);
-                    });
-                    $("#btnDelete").unbind("click").bind("click", function(){
-                        var eventId = $(this).attr("data-id");
-
-                        $("#confirmModal").modal("show");
-
-                        $("#btnYes").unbind("click").bind("click", function(){
-                            $(location).attr('href', 'index.php?c=bookit&a=delete&events_id='+eventId);
+                    if(response.disableAction == 1){
+                        $("#btnUpdate").prop("disabled", true);
+                        $("#btnDelete").prop("disabled", true);
+                    }else {
+                        $("#btnUpdate").prop("disabled", false);
+                        $("#btnDelete").prop("disabled", false);
+                        $("#btnUpdate").unbind("click").bind("click", function () {
+                            var eventId = $(this).attr("data-id");
+                            $(location).attr('href', 'index.php?c=bookit&a=update&id=' + eventId);
                         });
-                        $("#btnNo").unbind("click").bind("click", function(){
-                            $(location).attr('href', 'index.php?c=bookit&a=delete&events_id='+eventId+'&all_next');
+                        $("#btnDelete").unbind("click").bind("click", function () {
+                            var eventId = $(this).attr("data-id");
+
+                            $("#confirmModal").modal("show");
+
+                            $("#btnYes").unbind("click").bind("click", function () {
+                                $(location).attr('href', 'index.php?c=bookit&a=delete&events_id=' + eventId);
+                            });
+                            $("#btnNo").unbind("click").bind("click", function () {
+                                $(location).attr('href', 'index.php?c=bookit&a=delete&events_id=' + eventId + '&all_next');
+                            });
+
+
                         });
-
-
-                    });
+                    }
                 }else{
                     alert(response.message);
                 }
