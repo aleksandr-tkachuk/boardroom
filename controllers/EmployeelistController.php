@@ -3,7 +3,7 @@ class EmployeelistController extends BaseController{
 
 
     public function index(){
-        $this->showBackButton = true;
+       // $this->showBackButton = true;
         $users = User::model()->findAll();
         $this->render("index", ["users"=> $users]);
 
@@ -33,7 +33,7 @@ class EmployeelistController extends BaseController{
     }
 
     public function create() {
-        $this->showBackButton = true;
+        //$this->showBackButton = true;
         if(isset($_POST['submit'])){
             $users = new User();
             $users->users_name = $_POST['name'];

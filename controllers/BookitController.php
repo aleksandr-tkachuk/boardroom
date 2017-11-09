@@ -3,7 +3,7 @@ class BookitController extends BaseController{
 
     public function index(){
 
-        $this->showBackButton = true;
+       //$this->showBackButton = true;
 
         $currentRoom = (!isset($_GET["room"])) ? 1 : $_GET["room"];
 

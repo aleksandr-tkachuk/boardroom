@@ -13,7 +13,7 @@
 
 </head>
 <body>
-<div id="wrapperDiv">
+<div class="container">
     <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"]) { ?>
         <h4>Hello, <?php echo $_SESSION["authName"]; ?>
             <a href="index.php?c=index&a=logout" class="btn btn-default" style="color: #2aabd2">Logout</a>

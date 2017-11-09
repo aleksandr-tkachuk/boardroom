@@ -44,8 +44,12 @@
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
                 <button type="submit" name='submit' class="btn btn-default" style="color: #2aabd2">Add</button>
+                <a href="index.php?c=employeelist&a=index" class="btn btn-lg btn">
+                    <span class="glyphicon "></span>&laquo;Back
+                </a
             </div>
         </div>
     </form>
+
 
 
