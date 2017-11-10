@@ -1,7 +1,12 @@
-<div class="col-sm-12 img-rounded" style="background:url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrnRYXlv3gdCgE-yP0YTSOvN3mzMFChx0IDbN7wRCEcXINXPk) center no-repeat;
+<style>
+    .recuringContent{
+        display: none;
+    }
+</style>
+
+<div class="col-sm-12 img-rounded" style="background:url(images/backgroundBook.jpg) center no-repeat;
 background-size:cover;">
     <h2 >Boardroom Booker</h2>
-
     <form action="index.php?c=bookit&a=index&room=<?= $form["room"] ?>" id="formCreate" method="post" class="form-horizontal">
         <div id="errors">
             <?
@@ -57,34 +62,47 @@ background-size:cover;">
         - 30m increments<br>
         <p class="text-warning">4.Enter the specifics for the meeting.(This will be peopel see when they click on an event link.)</p>
         <textarea name="description"><?= $form["description"] ?></textarea><br>
-        <p class="text-warning">5.Is this going to be a recurring event?</p>
-        <input type="radio" name="recurring" <?= ($form["recurring"] == 0) ? "checked" : "" ?>
+        <p class="text-warning"> to be a recurring event?</p>
+
+        <input type="radio" class="recuringNo" name="recurring" <?= ($form["recurring"] == 0) ? "checked" : "" ?>
                value="0"><label>no</label><br>
-        <input type="radio" name="recurring" <?= ($form["recurring"] == 1) ? "checked" : "" ?>
+        <input type="radio" name="recurring" class="recuringYes" <?= ($form["recurring"] == 1) ? "checked" : "" ?>
                value="1"><label>yes</label><br>
-        <p class="text-warning">6.If it is recurring, specify weekly, bi-weekly,or monthly.</p>
-        <input type="radio" name="specify" <?= ($form["specify"] == 1) ? "checked" : "" ?>
-               value="1"><label>weekly</label><br>
-        <input type="radio" name="specify" <?= ($form["specify"] == 2) ? "checked" : "" ?>
-               value="2"><label>bi-weekly</label><br>
-        <input type="radio" name="specify" <?= ($form["specify"] == 3) ? "checked" : "" ?>
-               value="3"><label>monthly</label><br>
-        <p class="text-success">If weekly,or bi-weekly,specify the number of weeks for it to keep recurring.</p>
-        <p class="text-success">If monthly, specify,the number of months.(If you choose "bi-weekly" and put in an add number of weeks, the computer will round down.)</p>
-        <input type="number" name="duration" value="<?= $form["duration"] ?>" max="4" min="0"><label>duration(max: 4
-            weeks, 2 bi-weeks, 1 monthly)</label><br>
-        <br><br>
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Add event</button>
-            <a href="index.php" class="btn btn-primary">
-                <span class="glyphicon "></span>&laquo; Back
-            </a
+
+        <div class="recuringContent">
+            <p class="text-warning">.</p>
+            <input type="radio" name="specify" <?= ($form["specify"] == 1) ? "checked" : "" ?>
+                   value="1"><label>weekly</label><br>
+            <input type="radio" name="specify" <?= ($form["specify"] == 2) ? "checked" : "" ?>
+                   value="2"><label>bi-weekly</label><br>
+            <input type="radio" name="specify" <?= ($form["specify"] == 3) ? "checked" : "" ?>
+                   value="3"><label>monthly</label><br>
+            <p class="text-success">If weekly,or bi-weekly,specify the number of weeks for it to keep recurring.</p>
+            <p class="text-success">If monthly, specify,the number of months.(If you choose "bi-weekly" and put in an add number of weeks, the computer will round down.)</p>
+            <input type="number" name="duration" value="<?= $form["duration"] ?>" max="4" min="0"><label>duration(max: 4
+                weeks, 2 bi-weeks, 1 monthly)</label><br>
+            <br><br>
         </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Add event</button>
+                <a href="index.php" class="btn btn-primary">
+                    <span class="glyphicon "></span>&laquo; Back
+                </a
+            </div>
     </form>
     <br><br>
 </div>
 <script>
     $(document).ready(function () {
+        $('.recuringNo, .recuringYes').change(function(){
+            //поля  для заполнения рекурсии при условии её необходимости
+            var recuringResult = $('.recuringNo:checked, .recuringYes:checked').val();
+            if(recuringResult == 1){
+                $('.recuringContent').fadeIn('fast');
+            }else{
+                $('.recuringContent').fadeOut('fast');
+            }
+        });
         $('#date').datetimepicker({
             format: 'YYYY-MM-DD',
             defaultDate: '<?=$dateStartNow?>',
@@ -142,14 +160,6 @@ background-size:cover;">
             console.log(maxValue);
             $('input[name="duration"]').get(0).max = maxValue
         });
-        $('input[type=radio][name=recurring][value="0"]').click(function (e) {
-            //e.target.style.display='none';
-            console.log("value=", e);
-        });
-        /*        $('input[type=radio][name=recurring][value="0"]').change(function () {
-                    // TO DO script here
-                    this.style.display = none;
-                });*/
     });
 </script>
 

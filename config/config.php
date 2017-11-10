@@ -25,6 +25,20 @@ $config = [
             "password" => "123456",
             "dbname" => "boardroom",
         ],
+    ],
+    "db_test" => [
+        "type" => TYPE_DB,
+        "mysql" => [
+            "driver" => "mysql",
+            "host" => "localhost",
+            /*	"username" => "user13",
+               "password" => "tuser13",
+               "dbname" => "user13",*/
+            "username" => "root",
+            "password" => "",
+            "dbname" => "boardroom_test",
+            "charset" => "utf8"
+        ],
     ]
 ];
 

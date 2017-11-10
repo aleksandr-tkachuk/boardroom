@@ -9,17 +9,10 @@
 </style>
 <div id="mainDiv">
     <div class="container navbar-brand" style="text-align: center; color: #2b669a ">
-            Boardroom Booker
-    </div>
-    <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-primary <?=($timeFormat == 12) ? "active" : ""?>">
-            <input type="radio" name="options" value="12" autocomplete="off" <?=($timeFormat == 12) ? "checked" : ""?>>12
-        </label>
-        <label class="btn btn-primary <?=($timeFormat == 24) ? "active" : ""?>">
-            <input type="radio" name="options" value="24" autocomplete="off" <?=($timeFormat == 24) ? "checked" : ""?>>24
-        </label>
+        Boardroom Booker
     </div>
     <div id="mainFrameDiv" class="container">
+
         <div>
             <? if ($eventCreateSuccess != "") { ?>
                 <div class="alert alert-success" role="alert"><?= $eventCreateSuccess ?></div>
@@ -36,13 +29,26 @@
                        style='width: 100%'><?= $room['rooms_name'] ?></a>&nbsp;&nbsp;
                 <? } ?>
             </div>
-            <div id="timeNavigationMenu">
-                <a id="previousMonth" href="?c=index&a=index&room=<?= $currentRoom?>&d=<?= $d ?>&go=prev" class="btn btn-default"><</a>
+            <div class="row" style="margin: 1% 0">
+            <div id="timeNavigationMenu" class="col-md-3">
+                <a id="previousMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=prev"
+                   class="btn btn-default"><</a>
                 <label><?= $currMonth ?>
                     <?= $currYear ?></label>
-                <a id="nextMonth" href="?c=index&a=index&room=<?= $currentRoom?>&d=<?= $d ?>&go=next" class="btn btn-default">></a>
+                <a id="nextMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=next"
+                   class="btn btn-default">></a>
             </div>
-
+            <div class="btn-toolbar " data-toggle="buttons">
+                <label class="btn btn-info <?= ($timeFormat == 12) ? "active" : "" ?> ">
+                    <input type="radio" name="options" value="12"
+                           autocomplete="off" <?= ($timeFormat == 12) ? "checked" : "" ?>>12h
+                </label>
+                <label class="btn btn-info <?= ($timeFormat == 24) ? "active" : "" ?>">
+                    <input type="radio" name="options" value="24"
+                           autocomplete="off" <?= ($timeFormat == 24) ? "checked" : "" ?>>24h
+                </label>
+            </div>
+            </div>
             <div id="calendarDiv">
                 <table class="table table-bordered">
                     <tr>
@@ -78,7 +84,7 @@
                                 if (isset($events[$i])) {
                                     foreach ($events[$i] as $event) {
                                         if ($currentUser == $event["events_employer"] || $currentRole == 1) {
-                                            echo '<a href="javascript: void(0);" data-id="'.$event['events_id'].'" data-type="btnShowDetail">' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
+                                            echo '<a href="javascript: void(0);" data-id="' . $event['events_id'] . '" data-type="btnShowDetail">' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
                                         } else {
                                             echo '<span>' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</span><br>';
                                         }
@@ -96,9 +102,11 @@
             </div>
         </div>
         <div id="menuDiv">
-            <a href="index.php?c=bookit&a=index&room=<?= $currentRoom ?>" class="btn btn-default" style="color: #2b669a">Book It</a>&nbsp;&nbsp;
+            <a href="index.php?c=bookit&a=index&room=<?= $currentRoom ?>" class="btn btn-default"
+               style="color: #2b669a">Book It</a>&nbsp;&nbsp;
             <? if (App::checkAdmin()) { ?>
-                <a href="index.php?c=employeelist&a=index" class="btn btn-default" style="color: #2b669a">Employee List</a>
+                <a href="index.php?c=employeelist&a=index" class="btn btn-default" style="color: #2b669a">Employee
+                    List</a>
             <? } ?>
         </div>
     </div>
@@ -115,28 +123,28 @@
             <div class="modal-body">
                 <h4>Text in a details boardroom</h4>
                 <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr>
-                        <th colspan="3" style="text-align: center">Submitted <span id="date_created"></span></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">When:</th>
-                        <td id="timeStart"></td>
-                        <td id="timeEnd"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Notes:</th>
-                        <td colspan="2" style="text-align: center" id="description" ></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Who:</th>
-                        <td colspan="2" style="text-align: center" id="user" ></td>
-                    </tr>
-                    </tbody>
-                </table
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th colspan="3" style="text-align: center">Submitted <span id="date_created"></span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">When:</th>
+                            <td id="timeStart"></td>
+                            <td id="timeEnd"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Notes:</th>
+                            <td colspan="2" style="text-align: center" id="description"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Who:</th>
+                            <td colspan="2" style="text-align: center" id="user"></td>
+                        </tr>
+                        </tbody>
+                    </table
                 </div>
             </div>
             <div class="modal-footer">
@@ -158,7 +166,7 @@
             </div>
             <div class="modal-body">
                 <div class="alert alert-warning" role="alert">
-                Delete only this event or this and all next?
+                    Delete only this event or this and all next?
                 </div>
             </div>
             <div class="modal-footer">
@@ -178,14 +186,14 @@
                 data: {
                     "timeFormat": $(this).val()
                 },
-                success: function(response){
+                success: function (response) {
                     $(location).attr('href', 'index.php');
                 },
                 dataType: "json"
             });
         });
     });
-    $("a[data-type=btnShowDetail]").on("click", function(){
+    $("a[data-type=btnShowDetail]").on("click", function () {
         var eventId = $(this).attr("data-id");
         //console.log("open detail", eventId);
 
@@ -195,8 +203,8 @@
             data: {
                 "eventId": eventId
             },
-            success: function(response){
-                if(response.status == 'ok'){
+            success: function (response) {
+                if (response.status == 'ok') {
                     $("#timeStart").text(response.data.events_start);
                     $("#timeEnd").text(response.data.events_end);
                     $("#user").text(response.data.employerName);
@@ -205,11 +213,10 @@
                     $("#btnDelete").attr("data-id", response.data.events_id);
                     $("#date_created").text(response.data.events_created);
                     $("#myModal").modal("show");
-
-                    if(response.disableAction == 1){
+                    if (response.disableAction == 1) {
                         $("#btnUpdate").prop("disabled", true);
                         $("#btnDelete").prop("disabled", true);
-                    }else {
+                    } else {
                         $("#btnUpdate").prop("disabled", false);
                         $("#btnDelete").prop("disabled", false);
                         $("#btnUpdate").unbind("click").bind("click", function () {
@@ -231,7 +238,7 @@
 
                         });
                     }
-                }else{
+                } else {
                     alert(response.message);
                 }
             },

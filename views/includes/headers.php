@@ -6,13 +6,16 @@
 
     <!-- Bootstrap -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
-<!--    <link href="./css/bootstrap-theme.min.css" rel="stylesheet">-->
+    <link href="./css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="./css/font-awesome.min.css" rel="stylesheet">
     <link href="./css/bootstrap-datetimepicker.css" rel="stylesheet">
-    <link rel="stylesheet" href="./css/main.css" type="text/css">
-    <script src="./js/jquery-3.2.1.min.js"></script>
+    <link  href="./css/main.css" type="text/css" rel="stylesheet">
+    <link href="./css/bootstrap-glyphicons.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/fonts/glyphicons-halflings-regular.woff" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/fonts/glyphicons-halflings-regular.ttf" rel="stylesheet">
 
-
+   <!--<script  type="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.js"></script>-->
+   <script src="./js/jquery-3.2.1.min.js"></script>
 </head>
 <body>
 <div class="container">

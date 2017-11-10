@@ -199,8 +199,8 @@ class BookitController extends BaseController{
                 "id" => $event->events_id,
                 "user" => $event->events_employer,
                 "date" =>  date("Y-m-d", strtotime($event->events_start)),
-                "start" =>  date("H:i", strtotime($event->events_start)),
-                "end" => date("H:i", strtotime($event->events_end)),
+                "start" =>  date("Y-m-d H:i:s", strtotime($event->events_start)),
+                "end" => date("Y-m-d H:i:s", strtotime($event->events_end)),
                 "description" => $event->events_description,
                 "recurring" => $event->events_recurring,
                 "specify" => $event->events_specify,
@@ -260,7 +260,8 @@ class BookitController extends BaseController{
             $this->render("update", [
                 "user"=> $user,
                 "users"=>$users,
-                "form" => $form
+                "form" => $form,
+                "timeFormat" => (isset($_SESSION["timeFormat"])) ? $_SESSION["timeFormat"] : 12
 
             ]);
         }else{
