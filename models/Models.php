@@ -1,17 +1,15 @@
 <?php
 
 abstract class Models{
-    
     protected $db;
     private static  $_models = [];
 
-
     abstract public function getTableName();
-    
+
     public function __construct(){
         $this->db = App::$db;
     }
-    
+
     public static function model($className = __CLASS__){
         if(isset(self::$_models[$className])){
             return self::$_models[$className];
@@ -35,10 +33,10 @@ abstract class Models{
                 $dbParams[] = $val;
                 $ind++;
             }
-            
+
             $sql .= $where;
         }
-        
+
         if(count($orders) != 0){
             $order = " order by ";
             $ind = 0;
@@ -54,9 +52,9 @@ abstract class Models{
         $sth = $this->db->prepare($sql);
         $sth->execute($dbParams);
         return $sth->fetchAll(PDO::FETCH_ASSOC);
-        
+
     }
-    
+
     public function find($id){
         $sql = "select * from ".$this->getTableName()." where ".$this->getTableName()."_id = ?";
 
@@ -73,9 +71,9 @@ abstract class Models{
         }else{
             return null;
         }
-        
+
     }
-    
+
     public function save(){
         $id = $this->getTableName()."_id";
         if(!empty($this->$id)){
@@ -84,8 +82,7 @@ abstract class Models{
             return $this->insert();
         }
     }
-    
-    
+
     private function update(){
         $sql = "update ".$this->getTableName()." set ";
         $fields = "";
@@ -106,8 +103,7 @@ abstract class Models{
         $id = $this->getTableName()."_id";
         $sql .= $fields." where ".$this->getTableName()."_id=".$this->$id;
         //echo $sql;
-        $this->db->sqlQuery($sql);
-        return true;
+        return $this->db->sqlQuery($sql);
     }
 
     private function insert(){
@@ -138,12 +134,12 @@ abstract class Models{
         $this->find($this->db->lastId());
         return $result;
     }
-    
+
     public function delete() {
         $sql = $this->db->prepare("DELETE FROM ".$this->getTableName()." where ".$this->getTableName()."_id = ?");
 //echo $sql;
-        $sql->execute(array($this->{$this->getTableName() . '_id'}));
+        return $sql->execute(array($this->{$this->getTableName() . '_id'}));
     }
 
-    
+
 }
