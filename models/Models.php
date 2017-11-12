@@ -57,11 +57,11 @@ abstract class Models{
 
     public function find($id){
         $sql = "select * from ".$this->getTableName()." where ".$this->getTableName()."_id = ?";
-
+//echo $sql;
         $sql = $this->db->prepare($sql);
         $sql->execute(array($id));
         $sqlResult = $sql->fetch(PDO::FETCH_ASSOC);
-
+       // print_r($sqlResult);exit;
         if($sqlResult){
             foreach ($sqlResult as $attr => $value){
                 $this->$attr = $value;
@@ -137,7 +137,7 @@ abstract class Models{
 
     public function delete() {
         $sql = $this->db->prepare("DELETE FROM ".$this->getTableName()." where ".$this->getTableName()."_id = ?");
-//echo $sql;
+
         return $sql->execute(array($this->{$this->getTableName() . '_id'}));
     }
 

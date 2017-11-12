@@ -105,4 +105,17 @@ class Bookit extends Models{
         $event->delete();
         return $room;
     }
+
+    public static function updateParents($eventId){
+        $event = Bookit::model()->find($eventId);
+        //$room = $event->events_room;
+       // print_r($event);
+        $sql = "update events set events_parent = 0 where events_parent =".$eventId;
+        self::model()->db->sqlQuery($sql);
+        //$event->delete();
+        //print_r($event);
+        //print_r($sql);
+        //return $room;
+    }
+
 }

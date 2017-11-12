@@ -66,10 +66,10 @@ class BookitController extends BaseController{
             $eventId = $this->createBookit($form, $action);
 
             $eventsRecurring = Bookit::model()->findAll(["events_parent =" => $eventId]);
-//            echo $eventId;
-//            print_r($eventsRecurring);
-            if($action == 'update' && sizeof($eventsRecurring) != 0){
+            //echo $eventId;
+            //print_r($eventsRecurring);
 
+            if($action == 'update' && sizeof($eventsRecurring) != 0){
                 $applyAll = (isset($form["btnApplyAll"])) ? $form["btnApplyAll"] : "off";
                 if($applyAll == 'on'){
                     foreach ($eventsRecurring as $event){
@@ -129,6 +129,7 @@ class BookitController extends BaseController{
                 header('Location: index.php?room=' . $currentRoom);
             }else {
                 if ($eventId != 0) {
+                    //var_dump($form);
                     if ($form["recurring"] == 1) {
                         if ($form["duration"] != 0) {
                             $position = 1;
@@ -193,6 +194,7 @@ class BookitController extends BaseController{
 
     public function update(){
         $eventId = (isset($_GET["id"])) ? $_GET["id"] : '';
+
         if($eventId){
             $event = Bookit::model()->find($eventId);
             $form = [
@@ -208,12 +210,13 @@ class BookitController extends BaseController{
                 "errors" => [],
                 "room" => $event->events_room
             ];
-
+//            print_r($event);
             if(sizeof($_POST) != 0){
                 $form = $_POST;
 
                 $event = Bookit::model()->find($form["id"]);
                 $dDays = 0;
+
                 if($form["date"] != date("Y-m-d", strtotime($event->events_start))){
 //                    echo "!!!";
                     list($date, $time) = explode(" ", $event->events_start);
@@ -225,7 +228,7 @@ class BookitController extends BaseController{
 
                 $applyAll = (isset($form["btnApplyAll"])) ? $form["btnApplyAll"] : "off";
                 //print_r($event);exit();
-                //echo $event->events_parent ," -- ", $applyAll;
+//                echo $event->events_parent ," -- ", $applyAll;
                 if($applyAll == 'on'){
                     if($event->events_parent != 0) {
                         $event = Bookit::model()->find($event->events_parent);
@@ -250,8 +253,9 @@ class BookitController extends BaseController{
                 $form["enddatetime"] = $form["date"]." ".$form["end"];
 
 //                print_r($form);
-//                print_r($event);
-//                exit();
+//                echo '<br>';
+               //print_r($event);
+              // exit();
                 $this->checkBookit($form, $event->events_room, "update");
             }
             $user = Employeelist::model()->find($_SESSION['userId']);
@@ -270,27 +274,31 @@ class BookitController extends BaseController{
     }
 
     public function delete() {
-        //print_r($_GET);
         $deleteAllNext = (isset($_GET["all_next"])) ? true : false;
-
         if($deleteAllNext){
-//            echo "all";
             if (isset($_GET['events_id'])) {
                 $room = Bookit::deleteAllNext($_GET['events_id']);
             }
         }else {
-//            echo "one";
             if (isset($_GET['events_id'])) {
                 $event = Bookit::model()->find($_GET['events_id']);
                 $room = $event->events_room;
+                //print_r($_GET);
                 $event->delete();
             }
+            if($_GET['events_parent'] == 0){
+                $room = Bookit::updateParents($_GET['events_id']);
+
+            }
         }
+        //print_r($_GET);
+
         header('Location: index.php?c=index&room='.$room);
 
     }
 
     private function createBookit($params, $action){
+        //print_r($params);
         if($action == 'add') {
             $bookit = new Bookit();
             $bookit->events_created = date("Y-m-d H:i:s", strtotime("now"));
@@ -307,7 +315,7 @@ class BookitController extends BaseController{
         $bookit->events_parent = $params["parent"];
         $bookit->events_position = $params["position"];
         $bookit->events_room = $params["room"];
-
+//print_r($bookit);
         if($bookit->save()){
             return $bookit->events_id;
         }else{

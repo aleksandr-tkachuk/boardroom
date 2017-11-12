@@ -6,7 +6,7 @@
 
 <div class="col-sm-12 img-rounded" style="background:url(images/backgroundBook.jpg) center no-repeat;
 background-size:cover;">
-    <h2 >Boardroom Booker</h2>
+    <h2 >Boardroom <?= $form["room"] ?></h2>
     <form action="index.php?c=bookit&a=index&room=<?= $form["room"] ?>" id="formCreate" method="post" class="form-horizontal">
         <div id="errors">
             <?
@@ -20,8 +20,8 @@ background-size:cover;">
         </div>
         <h3 class="text-success">New Event</h3>
         <p class="text-warning">1.Booked for:</p>
-        <select name="user" class="selectpicker" data-style="btn-primary">
-            <? if ($user->users_name == 'Admin') {
+        <select name="user" data-style="btn-primary" class="form-control"  style="width: auto">
+            <? if ($user->users_role == 1) {
                 foreach ($users as $key => $value) { ?>
                     <option value="<?= $value['users_id'] ?>" <?= ($value["users_id"] == $form["user"]) ? "selected" : "" ?>><?= $value['users_name'] ?></option>
                 <? }
@@ -61,7 +61,7 @@ background-size:cover;">
         </div>
         - 30m increments<br>
         <p class="text-warning">4.Enter the specifics for the meeting.(This will be peopel see when they click on an event link.)</p>
-        <textarea name="description"><?= $form["description"] ?></textarea><br>
+        <textarea name="description" class="form-control" style="width: auto"><?= $form["description"] ?></textarea><br>
         <p class="text-warning"> to be a recurring event?</p>
 
         <input type="radio" class="recuringNo" name="recurring" <?= ($form["recurring"] == 0) ? "checked" : "" ?>
@@ -85,13 +85,14 @@ background-size:cover;">
         </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Add event</button>
-                <a href="index.php" class="btn btn-primary">
+                <a href="index.php?room=<?= $form["room"] ?>" class="btn btn-primary">
                     <span class="glyphicon "></span>&laquo; Back
                 </a
             </div>
     </form>
     <br><br>
 </div>
+
 <script>
     $(document).ready(function () {
         $('.recuringNo, .recuringYes').change(function(){

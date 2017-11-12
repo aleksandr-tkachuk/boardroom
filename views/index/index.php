@@ -7,11 +7,12 @@
         color: #0B610B;
     }
 </style>
-<div id="mainDiv">
+<div id="mainDiv" class="container">
     <div class="container navbar-brand" style="text-align: center; color: #2b669a ">
         Boardroom Booker
     </div>
-    <div id="mainFrameDiv" class="container">
+
+     <!--  вывод ошибок -->
 
         <div>
             <? if ($eventCreateSuccess != "") { ?>
@@ -21,7 +22,11 @@
                 <div class="alert alert-danger" role="alert"><?= $eventCreateError ?></div>
             <? } ?>
         </div>
+
         <div id="contentDiv">
+
+            <!--  отрисака комнат -->
+
             <div class="btn-group btn-group-justified">
                 <? foreach ($rooms as $room) { ?>
                     <a href="index.php?room=<?= $room['rooms_id'] ?>"
@@ -29,27 +34,36 @@
                        style='width: 100%'><?= $room['rooms_name'] ?></a>&nbsp;&nbsp;
                 <? } ?>
             </div>
+
+            <!-- переключение месяца года -->
+
             <div class="row" style="margin: 1% 0">
-            <div id="timeNavigationMenu" class="col-md-3">
-                <a id="previousMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=prev"
-                   class="btn btn-default"><</a>
-                <label><?= $currMonth ?>
-                    <?= $currYear ?></label>
-                <a id="nextMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=next"
-                   class="btn btn-default">></a>
-            </div>
-            <div class="btn-toolbar " data-toggle="buttons">
-                <label class="btn btn-info <?= ($timeFormat == 12) ? "active" : "" ?> ">
-                    <input type="radio" name="options" value="12"
-                           autocomplete="off" <?= ($timeFormat == 12) ? "checked" : "" ?>>12h
-                </label>
-                <label class="btn btn-info <?= ($timeFormat == 24) ? "active" : "" ?>">
-                    <input type="radio" name="options" value="24"
-                           autocomplete="off" <?= ($timeFormat == 24) ? "checked" : "" ?>>24h
-                </label>
-            </div>
+                <div id="timeNavigationMenu" class="col-md-3">
+                    <a id="previousMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=prev"
+                       class="btn btn-default"><</a>
+                    <label><?= $currMonth ?>
+                        <?= $currYear ?></label>
+                    <a id="nextMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=next"
+                       class="btn btn-default">></a>
+                </div>
+
+                <!--переключение режима времени-->
+
+                <div class="btn-toolbar " data-toggle="buttons">
+                    <label class="btn btn-info <?= ($timeFormat == 12) ? "active" : "" ?> ">
+                        <input type="radio" name="options" value="12"
+                               autocomplete="off" <?= ($timeFormat == 12) ? "checked" : "" ?>>12h
+                    </label>
+                    <label class="btn btn-info <?= ($timeFormat == 24) ? "active" : "" ?>">
+                        <input type="radio" name="options" value="24"
+                               autocomplete="off" <?= ($timeFormat == 24) ? "checked" : "" ?>>24h
+                    </label>
+                </div>
             </div>
             <div id="calendarDiv">
+
+                <!-- calendar -->
+
                 <table class="table table-bordered">
                     <tr>
                         <th>Sunday</th>
@@ -78,6 +92,7 @@
                             <?
                         } else {
                             ?>
+                            <!-- отрисовка события в календаре -->
                             <td>
                                 <?= $i ?><br>
                                 <?
@@ -109,7 +124,6 @@
                     List</a>
             <? } ?>
         </div>
-    </div>
 </div>
 <div id="myModal" class="modal fade in" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="false"
@@ -187,7 +201,7 @@
                     "timeFormat": $(this).val()
                 },
                 success: function (response) {
-                    $(location).attr('href', 'index.php');
+                    $(location).attr('href', 'index.php?room=<?= $currentRoom ?>');
                 },
                 dataType: "json"
             });
@@ -211,6 +225,7 @@
                     $("#description").text(response.data.events_description);
                     $("#btnUpdate").attr("data-id", response.data.events_id);
                     $("#btnDelete").attr("data-id", response.data.events_id);
+                    $("#btnDelete").attr("data-parent", response.data.events_parent);
                     $("#date_created").text(response.data.events_created);
                     $("#myModal").modal("show");
                     if (response.disableAction == 1) {
@@ -225,11 +240,12 @@
                         });
                         $("#btnDelete").unbind("click").bind("click", function () {
                             var eventId = $(this).attr("data-id");
+                            var events_parent = $(this).attr("data-parent");
 
                             $("#confirmModal").modal("show");
 
                             $("#btnYes").unbind("click").bind("click", function () {
-                                $(location).attr('href', 'index.php?c=bookit&a=delete&events_id=' + eventId);
+                                $(location).attr('href', 'index.php?c=bookit&a=delete&events_id=' + eventId+ '&events_parent=' + events_parent);
                             });
                             $("#btnNo").unbind("click").bind("click", function () {
                                 $(location).attr('href', 'index.php?c=bookit&a=delete&events_id=' + eventId + '&all_next');

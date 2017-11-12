@@ -1,11 +1,11 @@
 <style>
     .recuringContent{
-        display: none;
-    }
+             display: none;
+         }
 </style>
 <div class="col-sm-12 img-rounded" style="background:url(images/backgroundBook.jpg) center no-repeat;
 background-size:cover;">
-<h2>Boardroom Booker</h2>
+<h2>Boardroom <?= $form["room"] ?></h2>
     <form action="index.php?c=bookit&a=update&id=<?= $form["id"] ?>&room=<?= $form["room"] ?>" id="formCreate" method="post" class="form-horizontal">
         <input type="hidden" name="id" value="<?= $form["id"] ?>">
         <div id="errors">
@@ -19,8 +19,8 @@ background-size:cover;">
         </div>
         <h3 class="text-success">Update Event</h3>
         <p class="text-primary">1.Booked for:</p>
-        <select name="user" class="selectpicker" data-style="btn-primary">
-            <? if ($user->users_name == 'Admin') {
+        <select name="user" data-style="btn-primary" class="form-control"  style="width: auto">
+            <? if ($user->users_role == 1) {
                 foreach ($users as $key => $value) { ?>
                     <option value="<?= $value['users_id'] ?>" <?= ($value["users_id"] == $form["user"]) ? "selected" : "" ?>><?= $value['users_name'] ?></option>
                 <? }
@@ -59,8 +59,9 @@ background-size:cover;">
                     </span>
         </div>
         - 30m increments<br>
-        4.Enter the specifics for the meeting.(This will be peopel see when they click on an event link.)<br>
-        <textarea name="description"><?= $form["description"] ?></textarea><br>
+        <p class="text-warning">4.Enter the specifics for the meeting.(This will be peopel see when they click on an event link.)</p>
+        <textarea name="description" class="form-control" style="width: auto"><?= $form["description"] ?></textarea><br>
+        <input type=hidden name="recurring" id="recurring" value="">
         <? if ($form["recurring"] == 1) { ?>
             <input type="checkbox" name="btnApplyAll" class="recuringYes"><label>Apply to all occurrences?</label>
         <? } ?>
@@ -82,7 +83,7 @@ background-size:cover;">
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Update event</button>
-            <a href="index.php" class="btn btn-primary">
+            <a href="index.php?room=<?= $form["room"] ?>" class="btn btn-primary">
                 <span class="glyphicon "></span>&laquo; Back
             </a
         </div>
@@ -94,11 +95,14 @@ background-size:cover;">
             var recuringResult = $('.recuringYes:checked').val();
             console.log(recuringResult);
            if(recuringResult == 'on'){
+               $('#recurring').val(1);
                 $('.recuringContent').fadeIn('fast');
             }else{
+               $('#recurring').val(0);
                 $('.recuringContent').fadeOut('fast');
             }
         });
+
         $('input[type=radio][name=specify]').change(function (e) {
             $('input[name="duration"]').val('0');
             var maxValue;
@@ -143,13 +147,12 @@ background-size:cover;">
         });
 
         $("#formCreate").on("submit", function(){
+            var recuringResult = $('.recuringYes:checked').val();
             $("input[name=date]").val($("#date").data("DateTimePicker").date().get().format("YYYY-MM-DD"));
             $("input[name=start]").val($("#start").data("DateTimePicker").date().get().format("HH:mm"));
             $("input[name=end]").val($("#end").data("DateTimePicker").date().get().format("HH:mm"));
+            $("input[name=recurring]").val((recuringResult == 'on')? '1' : 0);
         });
-
-
-
     });
 </script>
 
