@@ -75,7 +75,7 @@ class BookitController extends BaseController{
     * check events and run create function
     */
     private function checkBookit($form, $currentRoom, $action = 'add'){
-        //print_r($form);exit();
+
         $colision = Bookit::checkColision($form, $action);
 
         if(!$colision) {
@@ -91,7 +91,7 @@ class BookitController extends BaseController{
                     foreach ($eventsRecurring as $event){
                         $form["id"] = $event["events_id"];
                         $form["position"] = $event["events_position"];
-                       // var_dump($form["id"]);
+
                         if ($form["duration"] != 0) {
                             $position = 1;
                             for ($i = 1; $i < $form["duration"]; $i++) {

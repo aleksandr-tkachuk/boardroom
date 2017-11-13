@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<database name="boardroom_test">
+		<table_structure name="users">
+			<field Field="users_id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" Comment="" />
+			<field Field="users_name" Type="varchar(255)" Null="NO" Key="" Extra="" Comment="" />
+			<field Field="users_login" Type="varchar(255)" Null="NO" Key="" Extra="" Comment="" />
+			<field Field="users_password" Type="varchar(255)" Null="NO" Key="" Extra="" Comment="" />
+			<field Field="users_role" Type="int(11)" Null="NO" Key="" Default="0" Extra="" Comment="1 - admin, 0 - user" />
+			<key Table="users" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="users_id" Collation="A" Cardinality="3" Null="" Index_type="BTREE" Comment="" Index_comment="" />
+			<options Name="users" Engine="InnoDB" Version="10" Row_format="Compact" Rows="3" Avg_row_length="5461" Data_length="16384" Max_data_length="0" Index_length="0" Data_free="4194304" Auto_increment="8" Create_time="2017-11-10 08:46:55" Collation="utf8_general_ci" Create_options="" Comment="" />
+		</table_structure>
+		<table_data name="users">
+			<row>
+				<field name="users_id">1</field>
+				<field name="users_name">Admin</field>
+				<field name="users_login">admin</field>
+				<field name="users_password">21232f297a57a5a743894a0e4a801fc3</field>
+				<field name="users_role">1</field>
+			</row>
+			<row>
+				<field name="users_id">2</field>
+				<field name="users_name">User</field>
+				<field name="users_login">user</field>
+				<field name="users_password">21232f297a57a5a743894a0e4a801fc3</field>
+				<field name="users_role">0</field>
+			</row>
+			<row>
+				<field name="users_id">4</field>
+				<field name="users_name">test</field>
+				<field name="users_login">test_login</field>
+				<field name="users_password">698d51a19d8a121ce581499d7b701668</field>
+				<field name="users_role">0</field>
+			</row>
+			<row>
+				<field name="users_id">5</field>
+				<field name="users_name">BAdmin</field>
+				<field name="users_login">admin</field>
+				<field name="users_password">21232f297a57a5a743894a0e4a801fc3</field>
+				<field name="users_role">1</field>
+			</row>
+		</table_data>
+	</database>
+</mysqldump>
