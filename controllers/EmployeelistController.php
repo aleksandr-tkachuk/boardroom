@@ -1,9 +1,10 @@
 <?php
 class EmployeelistController extends BaseController{
 
-
+    /*
+    * employer list
+    */
     public function index(){
-       // $this->showBackButton = true;
         $users = User::model()->findAll();
         $errorDeleteUser = (isset($_SESSION["errorDeleteUser"])) ? $_SESSION["errorDeleteUser"] : "";
         unset($_SESSION["errorDeleteUser"]);
@@ -12,6 +13,9 @@ class EmployeelistController extends BaseController{
 
     }
 
+    /*
+    * employer update form
+    */
     public function update() {
         $this->showBackButton = true;
         if(isset($_POST['submit'])){  
@@ -25,6 +29,9 @@ class EmployeelistController extends BaseController{
 
     }
 
+    /*
+    * employer delete
+    */
     public function remove() {
         if(isset($_GET['users_id'])){
             $countAdmins = sizeof(Employeelist::model()->findAll(["users_role" => 1]));
@@ -42,6 +49,9 @@ class EmployeelistController extends BaseController{
 
     }
 
+    /*
+    * employer create
+    */
     public function create() {
         //$this->showBackButton = true;
         if(isset($_POST['submit'])){

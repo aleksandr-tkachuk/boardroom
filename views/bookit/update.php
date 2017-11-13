@@ -1,8 +1,4 @@
-<style>
-    .recuringContent{
-             display: none;
-         }
-</style>
+
 <div class="col-sm-12 img-rounded" style="background:url(images/backgroundBook.jpg) center no-repeat;
 background-size:cover;">
 <h2>Boardroom <?= $form["room"] ?></h2>
@@ -132,8 +128,12 @@ background-size:cover;">
             defaultDate: '<?= $form["start"]?>',
             disabledTimeIntervals: [
                 [moment().hour(0).minutes(0), moment().hour(7).minutes(59)],
-                [moment().hour(20).minutes(1), moment().hour(24).minutes(0)]
+                [moment().hour(19).minutes(30), moment().hour(24).minutes(0)]
             ]
+        }).on('dp.change',function(event){
+            var minTime = new Date(event.date.valueOf());
+            minTime.setMinutes(minTime.getMinutes() + 30);
+            $('#end').data("DateTimePicker").minDate(minTime).defaultDate(minTime);
         });
 
         $('#end').datetimepicker({
@@ -144,6 +144,10 @@ background-size:cover;">
                 [moment().hour(0).minutes(0), moment().hour(7).minutes(59)],
                 [moment().hour(20).minutes(1), moment().hour(24).minutes(0)]
             ]
+        }).on('dp.show',function(event){
+            var minTime = new Date($("#start").data("DateTimePicker").date());
+            minTime.setMinutes(minTime.getMinutes() + 30);
+            $('#end').data("DateTimePicker").minDate(minTime).defaultDate(minTime);
         });
 
         $("#formCreate").on("submit", function(){

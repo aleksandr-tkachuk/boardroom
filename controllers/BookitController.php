@@ -1,11 +1,24 @@
 <?php
 class BookitController extends BaseController{
 
+    /*
+     * create event form
+     */
     public function index(){
 
-       //$this->showBackButton = true;
-
         $currentRoom = (!isset($_GET["room"])) ? 1 : $_GET["room"];
+        if(isset($_SESSION["d"])){
+            $d = (isset($_SESSION["d"])) ? $_SESSION["d"] : '';
+        }else {
+            $d = (isset($_GET["d"])) ? $_GET["d"] : '';
+        }
+        if(isset($_SESSION["go"])) {
+            $go = (isset($_SESSION["go"])) ? $_SESSION["go"] : '';
+        }else{
+            $go = (isset($_GET["go"])) ? $_GET["go"] : '';
+        }
+        $_SESSION["d"] = $d;
+        $_SESSION["go"] = $go;
 
         $user = Employeelist::model()->find($_SESSION['userId']);
         $users = Employeelist::model()->findAll();
@@ -44,7 +57,7 @@ class BookitController extends BaseController{
             $form["parent"] = 0;
             $form["position"] = 0;
 
-            $this->checkBookit($form, $currentRoom);
+            $form = $this->checkBookit($form, $currentRoom);
         }
 
         $this->render("index", [
@@ -58,17 +71,20 @@ class BookitController extends BaseController{
 
     }
 
+    /*
+    * check events and run create function
+    */
     private function checkBookit($form, $currentRoom, $action = 'add'){
         //print_r($form);exit();
         $colision = Bookit::checkColision($form, $action);
 
         if(!$colision) {
             $eventId = $this->createBookit($form, $action);
-
             $eventsRecurring = Bookit::model()->findAll(["events_parent =" => $eventId]);
-            //echo $eventId;
-            //print_r($eventsRecurring);
 
+            /*
+            * update events childrens
+            */
             if($action == 'update' && sizeof($eventsRecurring) != 0){
                 $applyAll = (isset($form["btnApplyAll"])) ? $form["btnApplyAll"] : "off";
                 if($applyAll == 'on'){
@@ -126,10 +142,21 @@ class BookitController extends BaseController{
                         }
                     }
                 }
-                header('Location: index.php?room=' . $currentRoom);
+                $d = (isset($_SESSION["d"])) ? $_SESSION["d"] : '';
+                $go = (isset($_SESSION["go"])) ? $_SESSION["go"] : '';
+                unset($_SESSION["d"]);
+                unset($_SESSION["go"]);
+                $goToMonth = '';
+                $goToMonth .= (strlen($d) != 0) ? '&d='.$d : '';
+                $goToMonth .= (strlen($go) != 0) ? '&go='.$go : '';
+
+                header('Location: index.php?room=' . $currentRoom . $goToMonth);
             }else {
+                /*
+                * create events children
+                */
                 if ($eventId != 0) {
-                    //var_dump($form);
+                    //print_r($form);
                     if ($form["recurring"] == 1) {
                         if ($form["duration"] != 0) {
                             $position = 1;
@@ -182,7 +209,15 @@ class BookitController extends BaseController{
                     }
                     $_SESSION["formMessages"] = "event " . $form["startdatetime"] . " - " . $form["enddatetime"] . " has been ".($action == 'add') ? 'create' : 'updated';
 
-                    header('Location: index.php?room=' . $currentRoom);
+                    $d = (isset($_SESSION["d"])) ? $_SESSION["d"] : '';
+                    $go = (isset($_SESSION["go"])) ? $_SESSION["go"] : '';
+                    unset($_SESSION["d"]);
+                    unset($_SESSION["go"]);
+                    $goToMonth = '';
+                    $goToMonth .= (strlen($d) != 0) ? '&d='.$d : '';
+                    $goToMonth .= (strlen($go) != 0) ? '&go='.$go : '';
+
+                    header('Location: index.php?room=' . $currentRoom . $goToMonth);
                 } else {
                     $form["errors"][] = "event not ".($action == 'add') ? 'create' : 'updated';
                 }
@@ -190,10 +225,27 @@ class BookitController extends BaseController{
         }else{
             $form["errors"][] = "event not created,".$form["startdatetime"]." - ".$form["enddatetime"]." is not empty";
         }
+        return $form;
     }
 
+    /*
+    * update events form
+    */
     public function update(){
         $eventId = (isset($_GET["id"])) ? $_GET["id"] : '';
+
+        if(isset($_SESSION["d"])){
+            $d = (isset($_SESSION["d"])) ? $_SESSION["d"] : '';
+        }else {
+            $d = (isset($_GET["d"])) ? $_GET["d"] : '';
+        }
+        if(isset($_SESSION["go"])) {
+            $go = (isset($_SESSION["go"])) ? $_SESSION["go"] : '';
+        }else{
+            $go = (isset($_GET["go"])) ? $_GET["go"] : '';
+        }
+        $_SESSION["d"] = $d;
+        $_SESSION["go"] = $go;
 
         if($eventId){
             $event = Bookit::model()->find($eventId);
@@ -210,7 +262,7 @@ class BookitController extends BaseController{
                 "errors" => [],
                 "room" => $event->events_room
             ];
-//            print_r($event);
+
             if(sizeof($_POST) != 0){
                 $form = $_POST;
 
@@ -218,17 +270,14 @@ class BookitController extends BaseController{
                 $dDays = 0;
 
                 if($form["date"] != date("Y-m-d", strtotime($event->events_start))){
-//                    echo "!!!";
                     list($date, $time) = explode(" ", $event->events_start);
 
                     $dDays = (strtotime($form["date"]." 00:00:00") - strtotime($date." 00:00:00"))/60/60/24;
-//                    echo $dDays;
 
                 }
 
                 $applyAll = (isset($form["btnApplyAll"])) ? $form["btnApplyAll"] : "off";
-                //print_r($event);exit();
-//                echo $event->events_parent ," -- ", $applyAll;
+
                 if($applyAll == 'on'){
                     if($event->events_parent != 0) {
                         $event = Bookit::model()->find($event->events_parent);
@@ -252,10 +301,6 @@ class BookitController extends BaseController{
                 $form["startdatetime"] = $form["date"]." ".$form["start"];
                 $form["enddatetime"] = $form["date"]." ".$form["end"];
 
-//                print_r($form);
-//                echo '<br>';
-               //print_r($event);
-              // exit();
                 $this->checkBookit($form, $event->events_room, "update");
             }
             $user = Employeelist::model()->find($_SESSION['userId']);
@@ -273,6 +318,9 @@ class BookitController extends BaseController{
         }
     }
 
+    /*
+    * delete events
+    */
     public function delete() {
         $deleteAllNext = (isset($_GET["all_next"])) ? true : false;
         if($deleteAllNext){
@@ -283,27 +331,45 @@ class BookitController extends BaseController{
             if (isset($_GET['events_id'])) {
                 $event = Bookit::model()->find($_GET['events_id']);
                 $room = $event->events_room;
-                //print_r($_GET);
+
+                /*
+                * if delete parent childrens set parent = 0
+                */
+                if($event->events_parent == 0){
+                    Bookit::updateParents($_GET['events_id']);
+                }
                 $event->delete();
+            }else{
+                $room = 1;
             }
-            if($_GET['events_parent'] == 0){
-                $room = Bookit::updateParents($_GET['events_id']);
 
-            }
         }
-        //print_r($_GET);
 
-        header('Location: index.php?c=index&room='.$room);
+        $d = (isset($_GET["d"])) ? $_GET["d"] : '';
+        $go = (isset($_GET["go"])) ? $_GET["go"] : '';
+
+        $goToMonth = '';
+        $goToMonth .= (strlen($d) != 0) ? '&d='.$d : '';
+        $goToMonth .= (strlen($go) != 0) ? '&go='.$go : '';
+        header('Location: index.php?c=index&room='.$room . $goToMonth);
 
     }
 
+    /*
+    * create/update events function
+    */
     private function createBookit($params, $action){
-        //print_r($params);
+        if($params["enddatetime"] < date("Y-m-d H:i:s", strtotime("now"))){
+            return $params["id"];
+        }
         if($action == 'add') {
             $bookit = new Bookit();
             $bookit->events_created = date("Y-m-d H:i:s", strtotime("now"));
         }else{
             $bookit = Bookit::model()->find($params["id"]);
+            if($bookit->events_end < date("Y-m-d H:i:s", strtotime("now"))){
+                return $bookit->events_id;
+            }
         }
         $bookit->events_employer = $params["user"];
         $bookit->events_start = $params["startdatetime"];
@@ -315,7 +381,7 @@ class BookitController extends BaseController{
         $bookit->events_parent = $params["parent"];
         $bookit->events_position = $params["position"];
         $bookit->events_room = $params["room"];
-//print_r($bookit);
+
         if($bookit->save()){
             return $bookit->events_id;
         }else{

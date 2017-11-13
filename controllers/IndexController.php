@@ -5,6 +5,9 @@ class IndexController extends BaseController{
         parent::__construct();
     }
 
+    /*
+    * calendar page
+    */
     public function index(){
         $d = (isset($_GET["d"])) ? $_GET["d"] : 0;
         if(isset($_GET["go"])){
@@ -26,11 +29,14 @@ class IndexController extends BaseController{
 
         $rooms = Rooms::model()->findAll();
 
+        /*
+        * get events for current month
+        */
         $events = Bookit::model()->findAll(
             [
                 "events_room =" => $currentRoom,
                 "events_start >=" => date("Y-m-01 00:00:00", $currentTimeStamp),
-                "events_end <=" => date("Y-m-".$allDays." 00:00:00", $currentTimeStamp)
+                "events_end <=" => date("Y-m-".$allDays." 23:59:59", $currentTimeStamp)
             ],
             [
                 "events_start" => "asc"
@@ -42,7 +48,6 @@ class IndexController extends BaseController{
             $day = date("j", strtotime($event["events_start"]));
             $eventsArray[$day][] = $event;
         }
-        //print_r($eventsArray);
 
         $eventCreateSuccess = (isset($_SESSION["formMessages"])) ? $_SESSION["formMessages"] : "";
         $eventCreateError = (isset($_SESSION["formErrorMessages"])) ? $_SESSION["formErrorMessages"] : "";
@@ -67,6 +72,9 @@ class IndexController extends BaseController{
         $this->render('index', $params);
     }
 
+    /*
+    * return event detail in json format
+    */
     public function detail(){
         if(isset($_POST["eventId"]) && $_POST["eventId"] != ""){
             $event = Bookit::model()->find($_POST["eventId"]);
@@ -85,6 +93,9 @@ class IndexController extends BaseController{
         }
     }
 
+    /*
+    * set time format (12/24)
+    */
     public function setTimeFormat(){
         if(isset($_POST["timeFormat"]) && $_POST["timeFormat"] != ""){
             $_SESSION["timeFormat"] = $_POST["timeFormat"];
@@ -93,6 +104,7 @@ class IndexController extends BaseController{
         }
         echo json_encode([ "status" => "ok"]);
     }
+
     /* action logout */
     public function logout(){
         unset($_SESSION["auth"]);

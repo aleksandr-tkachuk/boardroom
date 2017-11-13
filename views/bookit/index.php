@@ -1,8 +1,3 @@
-<style>
-    .recuringContent{
-        display: none;
-    }
-</style>
 
 <div class="col-sm-12 img-rounded" style="background:url(images/backgroundBook.jpg) center no-repeat;
 background-size:cover;">
@@ -10,11 +5,13 @@ background-size:cover;">
     <form action="index.php?c=bookit&a=index&room=<?= $form["room"] ?>" id="formCreate" method="post" class="form-horizontal">
         <div id="errors">
             <?
+
             if (sizeof($form["errors"]) > 0) {
-                echo "Errors:<br>";
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Errors:<br>";
                 foreach ($form["errors"] as $error) {
                     echo $error, "<br>";
                 }
+                echo "</div>";
             } ?>
             <br>
         </div>
@@ -116,7 +113,7 @@ background-size:cover;">
             defaultDate: '<?=$dateStartNow?>',
             disabledTimeIntervals: [
                 [moment().hour(0).minutes(0), moment().hour(7).minutes(59)],
-                [moment().hour(20).minutes(1), moment().hour(24).minutes(0)]
+                [moment().hour(19).minutes(30), moment().hour(24).minutes(0)]
             ]
         }).on('dp.change',function(event){
             var minTime = new Date(event.date.valueOf());
@@ -158,7 +155,7 @@ background-size:cover;">
                     maxValue = 1;
                     break;
             }
-            console.log(maxValue);
+            //console.log(maxValue);
             $('input[name="duration"]').get(0).max = maxValue
         });
     });

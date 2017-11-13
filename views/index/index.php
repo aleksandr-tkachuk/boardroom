@@ -1,12 +1,4 @@
-<style>
-    a {
-        color: #08088A;
-    }
 
-    a:hover {
-        color: #0B610B;
-    }
-</style>
 <div id="mainDiv" class="container">
     <div class="container navbar-brand" style="text-align: center; color: #2b669a ">
         Boardroom Booker
@@ -99,7 +91,7 @@
                                 if (isset($events[$i])) {
                                     foreach ($events[$i] as $event) {
                                         if ($currentUser == $event["events_employer"] || $currentRole == 1) {
-                                            echo '<a href="javascript: void(0);" data-id="' . $event['events_id'] . '" data-type="btnShowDetail">' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
+                                            echo '<a href="javascript: void(0);" class="eventLink" data-id="' . $event['events_id'] . '" data-type="btnShowDetail" data-d="'.((isset($_GET["d"])) ? $_GET["d"] : "").'" data-go="'.((isset($_GET["go"])) ? $_GET["go"] : "").'">' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
                                         } else {
                                             echo '<span>' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</span><br>';
                                         }
@@ -117,7 +109,7 @@
             </div>
         </div>
         <div id="menuDiv">
-            <a href="index.php?c=bookit&a=index&room=<?= $currentRoom ?>" class="btn btn-default"
+            <a href="index.php?c=bookit&a=index&room=<?= $currentRoom ?><?=(isset($_GET["d"])) ? "&d=".$_GET["d"] : ''?><?=(isset($_GET["go"])) ? "&go=".$_GET["go"] : ''?>" class="btn btn-default"
                style="color: #2b669a">Book It</a>&nbsp;&nbsp;
             <? if (App::checkAdmin()) { ?>
                 <a href="index.php?c=employeelist&a=index" class="btn btn-default" style="color: #2b669a">Employee
@@ -209,6 +201,9 @@
     });
     $("a[data-type=btnShowDetail]").on("click", function () {
         var eventId = $(this).attr("data-id");
+
+        var d = $(this).attr("data-d");
+        var go = $(this).attr("data-go");
         //console.log("open detail", eventId);
 
         $.ajax({
@@ -225,7 +220,7 @@
                     $("#description").text(response.data.events_description);
                     $("#btnUpdate").attr("data-id", response.data.events_id);
                     $("#btnDelete").attr("data-id", response.data.events_id);
-                    $("#btnDelete").attr("data-parent", response.data.events_parent);
+
                     $("#date_created").text(response.data.events_created);
                     $("#myModal").modal("show");
                     if (response.disableAction == 1) {
@@ -236,19 +231,27 @@
                         $("#btnDelete").prop("disabled", false);
                         $("#btnUpdate").unbind("click").bind("click", function () {
                             var eventId = $(this).attr("data-id");
-                            $(location).attr('href', 'index.php?c=bookit&a=update&id=' + eventId);
+
+                            var goToMonth = '';
+                            goToMonth += '&d='+d;
+                            goToMonth += '&go='+go;
+                            $(location).attr('href', 'index.php?c=bookit&a=update&id=' + eventId + goToMonth);
                         });
                         $("#btnDelete").unbind("click").bind("click", function () {
                             var eventId = $(this).attr("data-id");
-                            var events_parent = $(this).attr("data-parent");
 
                             $("#confirmModal").modal("show");
 
+                            var goToMonth = '';
+                            goToMonth += '&d='+d;
+                            goToMonth += '&go='+go;
+
                             $("#btnYes").unbind("click").bind("click", function () {
-                                $(location).attr('href', 'index.php?c=bookit&a=delete&events_id=' + eventId+ '&events_parent=' + events_parent);
+                                console.log(goToMonth);
+                                $(location).attr('href', 'index.php?c=bookit&a=delete&events_id=' + eventId + goToMonth);
                             });
                             $("#btnNo").unbind("click").bind("click", function () {
-                                $(location).attr('href', 'index.php?c=bookit&a=delete&events_id=' + eventId + '&all_next');
+                                $(location).attr('href', 'index.php?c=bookit&a=delete&events_id=' + eventId + goToMonth + '&all_next');
                             });
 
 

@@ -1,6 +1,9 @@
 <?php
 class db_new extends PDO{
 
+    /*
+    * db constructor (connect to database)
+    */
 	public function __construct($config){
 		$dsn = $config['driver'] .
 			':host=' . $config['host'] .
@@ -11,6 +14,9 @@ class db_new extends PDO{
 		parent::__construct($dsn, $config['username'], $config['password']);
 	}
 
+    /*
+    * run request select and return rows
+    */
 	public function select($sql, $single = false){
 		if(trim($sql) == "") return [];
 
@@ -27,14 +33,23 @@ class db_new extends PDO{
         return $rows;
 	}
 
+    /*
+    * return last insert id
+    */
 	public function lastId() {
 		return $this->lastInsertId();
 	}
 
+    /*
+    * run sql request
+    */
 	public function sqlQuery($sql) {
 		return $this->exec($sql);
 	}
 
+    /*
+    * return mysql error info
+    */
 	public function getError() {
 		return $this->errorInfo();
 	}

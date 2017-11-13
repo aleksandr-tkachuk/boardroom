@@ -14,15 +14,23 @@ class Bookit extends Models{
     public $events_room;
     public $events_created;
 
-
+    /*
+     * get table name
+     */
     public function getTableName(){
         return "events";
     }
 
+    /*
+    * get object model
+    */
     public static function model($className = __CLASS__){
         return parent::model($className);
     }
 
+    /*
+    * return all records
+    */
     public function findAll($params = [], $orders = []){
         $sql = "select * from ".$this->getTableName();
         $dbParams = [];
@@ -53,14 +61,16 @@ class Bookit extends Models{
             }
             $sql .= $order;
         }
-        //echo $sql;
-        //print_r($dbParams);
+
         $sth = $this->db->prepare($sql);
         $sth->execute($dbParams);
         return $sth->fetchAll(PDO::FETCH_ASSOC);
 
     }
 
+    /*
+    * check collision time
+    */
     public static function checkColision($newBookit, $action = 'add'){
         $start = $newBookit["startdatetime"];
         $end = $newBookit["enddatetime"];
@@ -71,18 +81,18 @@ class Bookit extends Models{
             (
                 ( events_start <= '" . $start . "' and events_end >= '" . $end . "' )
                 or
-                ( events_start >= '" . $start . "' and events_end <= '" . $end . "' )
-                or
                 ( events_start >= '" . $start . "' and events_end >= '" . $end . "' and events_start <= '" . $end . "' )
                 or
-                ( events_start <= '" . $start . "' and events_end <= '" . $end . "' and events_end >= '" . $start . "' )
+                ( events_start <= '" . $start . "' and events_end <= '" . $end . "' and events_end >= '" . $start . "')
+                or
+                ( events_start >= '" . $start . "' and events_end <= '" . $end . "' )
             )
             and events_room = ".$room."
         ";
         if($action == 'update'){
             $sql .= ' and events_id != '.$newBookit["id"].' and events_parent != '.$newBookit["id"];
         }
-//echo $sql;exit();
+
         $sth = self::model()->db->prepare($sql);
         $sth->execute([]);
         $result = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -91,6 +101,9 @@ class Bookit extends Models{
 
     }
 
+    /*
+    * delete all next events
+    */
     public static function deleteAllNext($eventId){
         $event = Bookit::model()->find($eventId);
         $room = $event->events_room;
@@ -106,16 +119,12 @@ class Bookit extends Models{
         return $room;
     }
 
+    /*
+    * if delete parent set all child events as parent
+    */
     public static function updateParents($eventId){
-        $event = Bookit::model()->find($eventId);
-        //$room = $event->events_room;
-       // print_r($event);
-        $sql = "update events set events_parent = 0 where events_parent =".$eventId;
+        $sql = "update " . self::model()->getTableName() . " set events_recurring = 0, events_parent = 0 where events_parent =".$eventId;
         self::model()->db->sqlQuery($sql);
-        //$event->delete();
-        //print_r($event);
-        //print_r($sql);
-        //return $room;
     }
 
 }

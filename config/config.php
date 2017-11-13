@@ -17,14 +17,7 @@ $config = [
             "password" => "123456",
             "dbname" => "boardroom",
             "charset" => "utf8"
-        ],
-        "postgre" => [
-            "driver" => "pgsql",
-            "host" => "localhost",
-            "username" => "postgres",
-            "password" => "123456",
-            "dbname" => "boardroom",
-        ],
+        ]
     ],
     "db_test" => [
         "type" => TYPE_DB,

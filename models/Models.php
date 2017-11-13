@@ -4,12 +4,19 @@ abstract class Models{
     protected $db;
     private static  $_models = [];
 
+
     abstract public function getTableName();
 
+    /*
+    * model constructor
+    */
     public function __construct(){
         $this->db = App::$db;
     }
 
+    /*
+    * return object model (singleton)
+    */
     public static function model($className = __CLASS__){
         if(isset(self::$_models[$className])){
             return self::$_models[$className];
@@ -19,6 +26,9 @@ abstract class Models{
         }
     }
 
+    /*
+    * return all records
+    */
     public function findAll($params = [], $orders = []){
         $sql = "select * from ".$this->getTableName();
         $dbParams = [];
@@ -55,13 +65,16 @@ abstract class Models{
 
     }
 
+    /*
+    * return record by id
+    */
     public function find($id){
         $sql = "select * from ".$this->getTableName()." where ".$this->getTableName()."_id = ?";
-//echo $sql;
+
         $sql = $this->db->prepare($sql);
         $sql->execute(array($id));
         $sqlResult = $sql->fetch(PDO::FETCH_ASSOC);
-       // print_r($sqlResult);exit;
+
         if($sqlResult){
             foreach ($sqlResult as $attr => $value){
                 $this->$attr = $value;
@@ -74,6 +87,9 @@ abstract class Models{
 
     }
 
+    /*
+    * save model
+    */
     public function save(){
         $id = $this->getTableName()."_id";
         if(!empty($this->$id)){
@@ -83,15 +99,15 @@ abstract class Models{
         }
     }
 
+    /*
+    * update record
+    */
     private function update(){
         $sql = "update ".$this->getTableName()." set ";
         $fields = "";
         $comma = 0;
 
         foreach ($this as $attr => $value){
-
-            //if( !in_array(gettype($value), ['boolean', 'integer', 'double', 'string'])) continue;
-
             if($attr != "db"){
                 if($comma != 0){
                     $fields .= ", ";
@@ -102,10 +118,13 @@ abstract class Models{
         }
         $id = $this->getTableName()."_id";
         $sql .= $fields." where ".$this->getTableName()."_id=".$this->$id;
-        //echo $sql;
+
         return $this->db->sqlQuery($sql);
     }
 
+    /*
+    * insert record
+    */
     private function insert(){
         $sql = "insert into ".$this->getTableName();
         $fields = "";
@@ -125,16 +144,17 @@ abstract class Models{
             }
         }
         $sql = $sql." ($fields) values ($values)";
-//        echo $sql;
-//        print_r($sqlValues);
+
         $sth = $this->db->prepare($sql);
         $result = $sth->execute($sqlValues);
-        //print_r($sth->errorInfo());
-        //$this->id = $this->db->lastId();
+
         $this->find($this->db->lastId());
         return $result;
     }
 
+    /*
+    * delete record
+    */
     public function delete() {
         $sql = $this->db->prepare("DELETE FROM ".$this->getTableName()." where ".$this->getTableName()."_id = ?");
 

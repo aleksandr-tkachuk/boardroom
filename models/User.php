@@ -7,14 +7,23 @@ class User extends Models{
     public $users_name;
     public $users_role;
 
+    /*
+    * return table name
+    */
     public function getTableName(){
         return "users";
     }
 
+    /*
+    * return object model
+    */
     public static function model($className = __CLASS__){
         return parent::model($className);
     }
 
+    /*
+    * return user by login
+    */
     public function findByLogin($login){
         $sql = "select * from ".$this->getTableName()." where ".$this->getTableName()."_login = ?";
 
