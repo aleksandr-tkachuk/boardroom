@@ -113,7 +113,7 @@ class IndexController extends BaseController{
 
     /*/ action auth /*/
     public function auth(){
-        //print_r($_POST);
+
         if(sizeof($_POST) != 0){
             if($_POST["login"] != "" && $_POST["password"] != ""){
                 $user = User::model()->findByLogin($_POST["login"]);

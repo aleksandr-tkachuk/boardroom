@@ -2,9 +2,7 @@
 
 use PHPUnit\DbUnit\Operation\Truncate;
 
-require_once __DIR__ . '/../../libraries/autoloader.php';
-require_once __DIR__ . '/../../libraries/composer/vendor/autoload.php';
-require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../AbstractApiTestClass.php';
 require_once __DIR__ . '/Stub/TestModelsClass.php';
 
 /**
@@ -13,39 +11,9 @@ require_once __DIR__ . '/Stub/TestModelsClass.php';
  * Date: 11/10/17
  * Time: 8:59 AM
  */
-class ModelsTest extends PHPUnit\DbUnit\TestCase
+class ModelsTest extends AbstractApiTestClass
 {
-    public static $config;
-
-    protected $conn = null;
-
-    /**
-     * Returns the test database connection.
-     *
-     * @return \PHPUnit\DbUnit\Database\Connection
-     */
-    protected function getConnection()
-    {
-        if ($this->conn === null) {
-            $pdo = new db_new(self::$config["db_test"][self::$config["db_test"]["type"]]);
-
-            $this->conn = $this->createDefaultDBConnection($pdo, self::$config["db_test"][TYPE_DB]["dbname"]);
-        }
-
-        return $this->conn;
-    }
-
-    /**
-     * Returns the test dataset.
-     *
-     * @return \PHPUnit\DbUnit\DataSet\IDataSet
-     */
-    protected function getDataSet()
-    {
-        return $this->createMySQLXMLDataSet(dirname(__FILE__). '/_files/boardroom_test.xml');
-    }
-
-    public function testReadAllEmptyUsers()
+    public function testFindAllEmptyUsers()
     {
         $testModel = $this->getTestModel();
 
@@ -58,7 +26,7 @@ class ModelsTest extends PHPUnit\DbUnit\TestCase
     /**
      * @dataProvider optionsProvider
      */
-    public function testReadUsersByCondtitions($params, $orders, $count, $expectedOrderBy = [])
+    public function testFindUsersByCondtitions($params, $orders, $count, $expectedOrderBy = [])
     {
         $testModel = $this->getTestModel();
 
@@ -188,10 +156,26 @@ class ModelsTest extends PHPUnit\DbUnit\TestCase
         $testModel = new TestModelsClass();
         $refObject = new ReflectionObject($testModel);
         $refProperty = $refObject->getProperty('db');
-        $refProperty->setAccessible( true );
+        $refProperty->setAccessible(true);
         $refProperty->setValue($testModel, $this->conn->getConnection());
 
         return $testModel;
+    }
+
+    public function testAddModel()
+    {
+        /* @var $calculator Models|\PHPUnit_Framework_MockObject_MockObject */
+        $models = $this
+            ->getMockBuilder('Models')
+            ->getMockForAbstractClass();
+
+        $result = $models::model('\stdClass');
+
+        $this->assertInstanceOf('\stdClass', $result);
+
+        $result = $models::model('\stdClass');
+
+        $this->assertInstanceOf('\stdClass', $result);
     }
 }
 
