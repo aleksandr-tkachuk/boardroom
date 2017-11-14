@@ -81,9 +81,9 @@ class Bookit extends Models{
             (
                 ( events_start <= '" . $start . "' and events_end >= '" . $end . "' )
                 or
-                ( events_start >= '" . $start . "' and events_end >= '" . $end . "' and events_start <= '" . $end . "' )
+                ( events_start >= '" . $start . "' and events_end >= '" . $end . "' and events_start < '" . $end . "' )
                 or
-                ( events_start <= '" . $start . "' and events_end <= '" . $end . "' and events_end >= '" . $start . "')
+                ( events_start <= '" . $start . "' and events_end <= '" . $end . "' and events_end > '" . $start . "')
                 or
                 ( events_start >= '" . $start . "' and events_end <= '" . $end . "' )
             )
@@ -92,7 +92,6 @@ class Bookit extends Models{
         if($action == 'update'){
             $sql .= ' and events_id != '.$newBookit["id"].' and events_parent != '.$newBookit["id"];
         }
-
         $sth = self::model()->db->prepare($sql);
         $sth->execute([]);
         $result = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -109,9 +108,11 @@ class Bookit extends Models{
         $room = $event->events_room;
         if($event->events_parent == 0){
             $sql = "delete from " . self::model()->getTableName() . " where events_parent = ".$event->events_id;
+
             self::model()->db->sqlQuery($sql);
         }else {
-            $sql = "delete from " . self::model()->getTableName() . " where events_parent = ".$event->events_parent." and events_position > ".$event->events_position." ";
+            $sql = "delete from " . self::model()->getTableName() . " where events_parent = ".$event->events_parent." and events_position > ".$event->events_position."";
+
             self::model()->db->sqlQuery($sql);
         }
 

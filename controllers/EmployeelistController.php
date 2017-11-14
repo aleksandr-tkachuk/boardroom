@@ -53,18 +53,25 @@ class EmployeelistController extends BaseController{
     * employer create
     */
     public function create() {
-        //$this->showBackButton = true;
+        $formError = '';
         if(isset($_POST['submit'])){
-            $users = new User();
-            $users->users_name = $_POST['name'];
-            $users->users_login = $_POST['login'];
-            $users->users_password = md5($_POST['password']);
-            $users->users_role = $_POST['role'];
+            $user = User::model()->findByLogin($_POST["login"]);
 
-            $users->save();
-            header('Location: index.php?c=employeelist&a=index');
+            if($user != null){
+                $formError = 'Login is exists';
+            }else{
+                $users = new User();
+                $users->users_name = $_POST['name'];
+                $users->users_login = $_POST['login'];
+                $users->users_password = md5($_POST['password']);
+                $users->users_role = $_POST['role'];
+
+                $users->save();
+                header('Location: index.php?c=employeelist&a=index');
+            }
+
         }
-        $this->render("create", []);
+        $this->render("create", ['formError' => $formError]);
     }
 
 }

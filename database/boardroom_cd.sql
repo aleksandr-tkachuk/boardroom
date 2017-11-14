@@ -117,7 +117,7 @@ TRUNCATE TABLE `rooms`;
 
 INSERT INTO `rooms` (`rooms_id`, `rooms_name`) VALUES
 (1, 'Boardroom 1'),
-(2, 'Boardroom 2'),
+(2, 'Boardroom 2'),
 (3, 'Boardroom 3');
 
 -- --------------------------------------------------------

@@ -29,6 +29,20 @@ class BookitController extends BaseController{
         $timeStart = date("H:00", strtotime("+1 hour"));
         $timeEnd = date("H:30", strtotime("+1 hour"));
 
+
+        if($dateTimeStart > date("Y-m-d 20:00:00", strtotime("now"))){
+            $dateTimeStart = date("Y-m-d 08:00:00", strtotime("+1 day"));
+        }
+        if($dateTimeEnd > date("Y-m-d 20:00:00", strtotime("now"))){
+            $dateTimeEnd = date("Y-m-d 08:30:00", strtotime("+1 day"));
+        }
+        if($dateTimeStart < date("Y-m-d 08:00:00", strtotime("now"))){
+            $dateTimeStart = date("Y-m-d 08:00:00", strtotime("now"));
+        }
+        if($dateTimeEnd < date("Y-m-d 08:00:00", strtotime("now"))){
+            $dateTimeEnd = date("Y-m-d 08:30:00", strtotime("now"));
+        }
+
         $form = [
             "user" => 0,
             "date" => $dateNow,
@@ -156,7 +170,6 @@ class BookitController extends BaseController{
                 * create events children
                 */
                 if ($eventId != 0) {
-                    //print_r($form);
                     if ($form["recurring"] == 1) {
                         if ($form["duration"] != 0) {
                             $position = 1;
@@ -207,7 +220,7 @@ class BookitController extends BaseController{
                             }
                         }
                     }
-                    $_SESSION["formMessages"] = "event " . $form["startdatetime"] . " - " . $form["enddatetime"] . " has been ".($action == 'add') ? 'create' : 'updated';
+                    $_SESSION["formMessages"] = "event " . $form["startdatetime"] . " - " . $form["enddatetime"] . " has been ".(($action == 'add') ? 'create' : 'updated');
 
                     $d = (isset($_SESSION["d"])) ? $_SESSION["d"] : '';
                     $go = (isset($_SESSION["go"])) ? $_SESSION["go"] : '';

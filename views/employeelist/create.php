@@ -1,6 +1,13 @@
 <div style="margin-left: 18%">
 <h2>Add a new employee</h2>
 </div>
+<?php
+    if (strlen($formError) > 0) {
+        echo "<div class=\"alert alert-danger\" role=\"alert\">Errors:<br>";
+        echo $formError, "<br>";
+        echo "</div>";
+    }
+    ?>
     <form action = "index.php?c=employeelist&a=create" method = 'post' class="form-horizontal">
         <div class="form-group">
             <label for="inputName"

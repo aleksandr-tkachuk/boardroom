@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Ноя 13 2017 г., 14:44
+-- Время создания: Ноя 14 2017 г., 11:57
 -- Версия сервера: 5.7.16
 -- Версия PHP: 5.6.29
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- База данных: `boardroom`
 --
-CREATE DATABASE IF NOT EXISTS `boardroom` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `boardroom`;
 
 -- --------------------------------------------------------
 
@@ -31,8 +29,8 @@ USE `boardroom`;
 CREATE TABLE `events` (
   `events_id` int(11) NOT NULL,
   `events_employer` int(11) NOT NULL,
-  `events_start` timestamp NOT NULL,
-  `events_end` timestamp NOT NULL,
+  `events_start` timestamp NULL DEFAULT NULL,
+  `events_end` timestamp NULL DEFAULT NULL,
   `events_description` text NOT NULL,
   `events_recurring` tinyint(1) NOT NULL DEFAULT '0',
   `events_specify` tinyint(1) NOT NULL DEFAULT '0',
@@ -40,14 +38,9 @@ CREATE TABLE `events` (
   `events_parent` int(11) NOT NULL DEFAULT '0',
   `events_position` tinyint(1) NOT NULL DEFAULT '0',
   `events_room` int(11) NOT NULL DEFAULT '1',
-  `events_created` timestamp NOT NULL
+  `events_created` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Очистить таблицу перед добавлением данных `events`
---
-
-TRUNCATE TABLE `events`;
 --
 -- Дамп данных таблицы `events`
 --
@@ -71,8 +64,6 @@ INSERT INTO `events` (`events_id`, `events_employer`, `events_start`, `events_en
 (46, 2, '2017-11-03 22:00:00', '2017-11-03 22:30:00', 'test room 3', 1, 3, 2, 0, 0, 3, '2017-11-08 13:49:07'),
 (47, 2, '2017-12-03 22:00:00', '2017-12-03 22:30:00', 'test room 3', 1, 3, 2, 46, 1, 3, '2017-11-08 13:49:07'),
 (88, 1, '2017-11-28 14:00:00', '2017-11-28 14:30:00', '11111', 1, 1, 4, 86, 2, 2, '2017-11-08 13:49:07'),
-(89, 1, '2017-12-12 14:00:00', '2017-12-12 14:30:00', '', 1, 1, 4, 88, 2, 2, '2017-11-08 13:49:07'),
-(90, 1, '2017-12-19 14:00:00', '2017-12-19 14:30:00', '', 1, 1, 4, 88, 3, 2, '2017-11-08 13:49:07'),
 (92, 1, '2017-11-09 15:00:00', '2017-11-09 15:30:00', '3333', 0, 1, 0, 0, 0, 1, '2017-11-08 14:00:36'),
 (94, 1, '2017-11-09 14:30:00', '2017-11-09 14:00:00', '', 0, 1, 0, 0, 0, 1, '2017-11-09 14:28:07'),
 (96, 1, '2017-11-09 09:00:00', '2017-11-09 09:30:00', '', 0, 1, 0, 0, 0, 1, '2017-11-09 21:00:38'),
@@ -88,64 +79,16 @@ INSERT INTO `events` (`events_id`, `events_employer`, `events_start`, `events_en
 (126, 1, '2017-11-27 09:30:00', '2017-11-27 10:00:00', 'qaz', 1, 1, 3, 0, 0, 1, '2017-11-13 09:44:50'),
 (129, 1, '2017-11-13 10:00:00', '2017-11-13 10:30:00', '', 0, 1, 0, 0, 0, 1, '2017-11-13 09:48:50'),
 (141, 1, '2017-11-30 10:00:00', '2017-11-30 10:30:00', '777', 0, 1, 3, 0, 2, 1, '2017-11-13 10:10:13'),
-(145, 1, '2017-11-16 10:00:00', '2017-11-16 10:30:00', '8888', 1, 1, 3, 0, 0, 1, '2017-11-13 10:16:32'),
-(146, 1, '2017-11-23 10:00:00', '2017-11-23 10:30:00', '8888', 1, 1, 3, 145, 1, 1, '2017-11-13 10:16:32'),
-(147, 1, '2017-11-30 10:30:00', '2017-11-30 11:30:00', '8888', 0, 1, 0, 0, 0, 1, '2017-11-13 10:52:56'),
+(146, 1, '2017-11-23 10:00:00', '2017-11-23 10:30:00', '8888', 0, 1, 3, 0, 1, 1, '2017-11-13 10:16:32'),
 (149, 1, '2017-11-13 12:00:00', '2017-11-13 12:30:00', '0000', 0, 1, 0, 0, 0, 1, '2017-11-13 11:08:09'),
 (150, 1, '2017-11-30 12:00:00', '2017-11-30 12:30:00', '000', 0, 1, 0, 0, 0, 1, '2017-11-13 11:09:08'),
-(151, 1, '2017-11-16 12:00:00', '2017-11-16 13:30:00', '', 1, 2, 2, 0, 0, 1, '2017-11-13 11:10:47');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `rooms`
---
-
-CREATE TABLE `rooms` (
-  `rooms_id` int(11) NOT NULL,
-  `rooms_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Очистить таблицу перед добавлением данных `rooms`
---
-
-TRUNCATE TABLE `rooms`;
---
--- Дамп данных таблицы `rooms`
---
-
-INSERT INTO `rooms` (`rooms_id`, `rooms_name`) VALUES
-(1, 'Boardroom 1'),
-(2, 'Boardroom 2'),
-(3, 'Boardroom 3');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `users`
---
-
-CREATE TABLE `users` (
-  `users_id` int(11) NOT NULL,
-  `users_name` varchar(255) NOT NULL,
-  `users_login` varchar(255) NOT NULL,
-  `users_password` varchar(255) NOT NULL,
-  `users_role` int(11) NOT NULL DEFAULT '0' COMMENT '1 - admin, 0 - user'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Очистить таблицу перед добавлением данных `users`
---
-
-TRUNCATE TABLE `users`;
---
--- Дамп данных таблицы `users`
---
-
-INSERT INTO `users` (`users_id`, `users_name`, `users_login`, `users_password`, `users_role`) VALUES
-(1, 'admin', 'admin', '21232f297a57a5a743894a0e4a801fc3', 1),
-(2, 'User', 'user', '21232f297a57a5a743894a0e4a801fc3', 0);
+(151, 1, '2017-11-16 12:00:00', '2017-11-16 13:30:00', '', 1, 2, 2, 0, 0, 1, '2017-11-13 11:10:47'),
+(160, 1, '2017-11-14 06:00:00', '2017-11-14 06:30:00', '', 0, 1, 0, 0, 0, 1, '2017-11-13 22:05:26'),
+(161, 1, '2017-11-15 08:00:00', '2017-11-15 08:30:00', '1111', 1, 1, 3, 0, 0, 1, '2017-11-14 08:07:02'),
+(165, 1, '2017-11-15 06:30:00', '2017-11-15 08:00:00', '5555', 0, 1, 0, 0, 0, 1, '2017-11-14 08:42:10'),
+(166, 1, '2017-11-14 09:30:00', '2017-11-14 10:00:00', 'yyy', 0, 1, 0, 0, 0, 1, '2017-11-14 08:44:26'),
+(168, 1, '2017-11-15 10:00:00', '2017-11-15 11:30:00', 'ddd', 0, 1, 0, 0, 0, 1, '2017-11-14 08:45:46'),
+(169, 1, '2017-11-15 11:30:00', '2017-11-15 13:00:00', '666666', 0, 1, 0, 0, 0, 1, '2017-11-14 08:46:23');
 
 --
 -- Индексы сохранённых таблиц
@@ -158,18 +101,6 @@ ALTER TABLE `events`
   ADD PRIMARY KEY (`events_id`);
 
 --
--- Индексы таблицы `rooms`
---
-ALTER TABLE `rooms`
-  ADD PRIMARY KEY (`rooms_id`);
-
---
--- Индексы таблицы `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`users_id`);
-
---
 -- AUTO_INCREMENT для сохранённых таблиц
 --
 
@@ -177,17 +108,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `events`
 --
 ALTER TABLE `events`
-  MODIFY `events_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
---
--- AUTO_INCREMENT для таблицы `rooms`
---
-ALTER TABLE `rooms`
-  MODIFY `rooms_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT для таблицы `users`
---
-ALTER TABLE `users`
-  MODIFY `users_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `events_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
