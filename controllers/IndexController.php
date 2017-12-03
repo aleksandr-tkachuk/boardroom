@@ -21,10 +21,11 @@ class IndexController extends BaseController{
         $currentRoom = (!isset($_GET["room"])) ? 1 : $_GET["room"];
 
         $currentTimeStamp = (isset($_GET["d"])) ? strtotime("first day of".$d." month") : strtotime("now");
+
         $m = date("F", $currentTimeStamp);
         $y = date("Y", $currentTimeStamp);
         $allDays = date("t", $currentTimeStamp);
-        //$firstDay = date("w", mktime(0, 0, 0, date("m", $currentTimeStamp), 1, $y));
+        //получаем полную дату 1го дня месяца
         $firstDay = date("w", strtotime($y."-".date("m", $currentTimeStamp)."-1"));
 
         $rooms = Rooms::model()->findAll();
@@ -67,7 +68,8 @@ class IndexController extends BaseController{
             "events" => $eventsArray,
             "eventCreateSuccess" => $eventCreateSuccess,
             "eventCreateError" => $eventCreateError,
-            "timeFormat" => (isset($_SESSION["timeFormat"])) ? $_SESSION["timeFormat"] : 12
+            "timeFormat" => (isset($_SESSION["timeFormat"])) ? $_SESSION["timeFormat"] : 12,
+            "options" => (isset($_SESSION["options"])) ? $_SESSION["options"] : 'su'
         );
         $this->render('index', $params);
     }
@@ -101,6 +103,18 @@ class IndexController extends BaseController{
             $_SESSION["timeFormat"] = $_POST["timeFormat"];
         }else{
             $_SESSION["timeFormat"] = 12;
+        }
+        echo json_encode([ "status" => "ok"]);
+    }
+
+    /*
+    * set date format (su/mo)
+    */
+    public function setOptions(){
+        if(isset($_POST["options"]) && $_POST["options"] != ""){
+            $_SESSION["options"] = $_POST["options"];
+        }else{
+            $_SESSION["options"] = 'su';
         }
         echo json_encode([ "status" => "ok"]);
     }

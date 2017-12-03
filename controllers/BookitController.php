@@ -147,10 +147,10 @@ class BookitController extends BaseController{
                                 $colision = Bookit::checkColision($form, "update");
                                 if (!$colision) {
                                     $this->createBookit($form, "update");
-                                } else {
+                                }/* else {
                                     $form["errors"][] = "event " . $position . " not updated, " . $form["startdatetime"] . " - " . $form["enddatetime"] . " is not empty";
                                     $_SESSION["formErrorMessages"] = "event " . $position . " not updated, " . $form["startdatetime"] . " - " . $form["enddatetime"] . " is not empty";
-                                }
+                                }*/
                                 $position++;
                             }
                         }
@@ -301,7 +301,6 @@ class BookitController extends BaseController{
                 }else{
                     $form["position"] = $event->events_position;
                 }
-                //print_r($event);exit();
                 $form["room"] = $event->events_room;
                 $form["id"] = $event->events_id;
                 $form["parent"] = $event->events_parent;

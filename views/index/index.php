@@ -1,121 +1,156 @@
-
 <div id="mainDiv" class="container">
     <div class="container navbar-brand" style="text-align: center; color: #2b669a ">
         Boardroom Booker
     </div>
 
-     <!--  вывод ошибок -->
+    <!--  вывод ошибок -->
 
-        <div>
-            <? if ($eventCreateSuccess != "") { ?>
-                <div class="alert alert-success" role="alert"><?= $eventCreateSuccess ?></div>
-            <? } ?>
-            <? if ($eventCreateError != "") { ?>
-                <div class="alert alert-danger" role="alert"><?= $eventCreateError ?></div>
+    <div>
+        <? if ($eventCreateSuccess != "") { ?>
+            <div class="alert alert-success" role="alert"><?= $eventCreateSuccess ?></div>
+        <? } ?>
+        <? if ($eventCreateError != "") { ?>
+            <div class="alert alert-danger" role="alert"><?= $eventCreateError ?></div>
+        <? } ?>
+    </div>
+
+    <div id="contentDiv">
+
+        <!--  отрисака комнат -->
+
+        <div class="btn-group btn-group-justified">
+            <? foreach ($rooms as $room) { ?>
+                <a href="index.php?room=<?= $room['rooms_id'] ?>"
+                   class="btn btn-primary <?= ($room['rooms_id'] == $currentRoom) ? "active" : "" ?>"
+                   style='width: 100%'><?= $room['rooms_name'] ?></a>&nbsp;&nbsp;
             <? } ?>
         </div>
 
-        <div id="contentDiv">
+        <!-- переключение месяца года -->
 
-            <!--  отрисака комнат -->
+        <div class="row" style="margin: 1% 0">
 
-            <div class="btn-group btn-group-justified">
-                <? foreach ($rooms as $room) { ?>
-                    <a href="index.php?room=<?= $room['rooms_id'] ?>"
-                       class="btn btn-primary <?= ($room['rooms_id'] == $currentRoom) ? "active" : "" ?>"
-                       style='width: 100%'><?= $room['rooms_name'] ?></a>&nbsp;&nbsp;
-                <? } ?>
+
+            <div id="timeNavigationMenu" class="col-md-3">
+                <a id="previousMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=prev"
+                   class="btn btn-default"><</a>
+                <label><?= $currMonth ?>
+                    <?= $currYear ?></label>
+                <a id="nextMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=next"
+                   class="btn btn-default">></a>
             </div>
 
-            <!-- переключение месяца года -->
+            <!--старт календаря понедельник,воскресенье-->
 
-            <div class="row" style="margin: 1% 0">
-                <div id="timeNavigationMenu" class="col-md-3">
-                    <a id="previousMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=prev"
-                       class="btn btn-default"><</a>
-                    <label><?= $currMonth ?>
-                        <?= $currYear ?></label>
-                    <a id="nextMonth" href="?c=index&a=index&room=<?= $currentRoom ?>&d=<?= $d ?>&go=next"
-                       class="btn btn-default">></a>
-                </div>
+            <div data-toggle="buttons" class="btn-toolbar col-md-1">
+                <button type="button" class="btn btn-info " id="format"
+                        value="<?= ($options == 'mo') ? 'su' : 'mo' ?>"><?= ($options == 'su') ? 'SU' : 'MO' ?></button>
+            </div>
 
+            <div class="btn-toolbar" data-toggle="buttons">
                 <!--переключение режима времени-->
 
-                <div class="btn-toolbar " data-toggle="buttons">
-                    <label class="btn btn-info <?= ($timeFormat == 12) ? "active" : "" ?> ">
-                        <input type="radio" name="options" value="12"
-                               autocomplete="off" <?= ($timeFormat == 12) ? "checked" : "" ?>>12h
-                    </label>
-                    <label class="btn btn-info <?= ($timeFormat == 24) ? "active" : "" ?>">
-                        <input type="radio" name="options" value="24"
-                               autocomplete="off" <?= ($timeFormat == 24) ? "checked" : "" ?>>24h
-                    </label>
-                </div>
+                <label class="btn btn-info <?= ($timeFormat == 12) ? "active" : "" ?> ">
+                    <input type="radio" name="options" value="12"
+                           autocomplete="off" <?= ($timeFormat == 12) ? "checked" : "" ?>>12h
+                </label>
+                <label class="btn btn-info <?= ($timeFormat == 24) ? "active" : "" ?>">
+                    <input type="radio" name="options" value="24"
+                           autocomplete="off" <?= ($timeFormat == 24) ? "checked" : "" ?>>24h
+                </label>
             </div>
-            <div id="calendarDiv">
 
-                <!-- calendar -->
+        </div>
+        <div id="calendarDiv">
 
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Sunday</th>
-                        <th>Monday</th>
-                        <th>Tuesday</th>
-                        <th>Wednesday</th>
-                        <th>Thursday</th>
-                        <th>Friday</th>
-                        <th>Saturday</th>
-                    </tr>
-                    <tr>
-                        <?
-                        $start = 0;
-                        $i = 1;
-                        while ($start < $allDays + $firstDay){
-                        if ($start == 7 || $start == 14 || $start == 21 || $start == 28 || $start == 35){
+            <!-- calendar -->
+
+            <table class="table table-bordered">
+                <?
+                if ($options == 'su') {
+                    $firstday = 'Monday';
+                    $start = 1;
+                    $a = 8;
+                    $b = 15;
+                    $c = 22;
+                    $d = 29;
+                    $j = 36;
+                } elseif ($options == 'mo') {
+                    $firstday = 'Sunday';
+                    $start = 0;
+                    $a = 7;
+                    $b = 14;
+                    $c = 21;
+                    $d = 28;
+                    $j = 35;
+                } ?>
+                <tr>
+                    <th><?= $firstday ?></th>
+                    <th><?= ($firstday == 'Sunday') ? 'Monday' : 'Tuesday' ?></th>
+                    <th><?= ($firstday == 'Sunday') ? 'Tuesday' : 'Wednesday' ?></th>
+                    <th><?= ($firstday == 'Sunday') ? 'Wednesday' : 'Thursday' ?></th>
+                    <th><?= ($firstday == 'Sunday') ? 'Thursday' : 'Friday' ?></th>
+                    <th><?= ($firstday == 'Sunday') ? 'Friday' : 'Saturday' ?></th>
+                    <th><?= ($firstday == 'Sunday') ? 'Saturday' : 'Sunday' ?></th>
+                </tr>
+                <tr>
+
+                    <?
+                    $i = 1;
+                    while ($start < $allDays + $firstDay){
+                    if ($start == $a || $start == $b || $start == $c || $start == $d || $start == $j){
+                    ?>
+                </tr>
+                <tr>
+                    <?
+                    }
+                    if ($start < $firstDay) {
                         ?>
-                    </tr>
-                    <tr>
+                        <td>&nbsp;</td>
                         <?
-                        }
-
-                        if ($start < $firstDay) {
-                            ?>
-                            <td>&nbsp;</td>
+                    } else {
+                        ?>
+                        <!-- отрисовка события в календаре -->
+                        <td>
+                            <?= $i ?><br>
                             <?
-                        } else {
-                            ?>
-                            <!-- отрисовка события в календаре -->
-                            <td>
-                                <?= $i ?><br>
-                                <?
-                                if (isset($events[$i])) {
-                                    foreach ($events[$i] as $event) {
-                                        if ($currentUser == $event["events_employer"] || $currentRole == 1) {
-                                            echo '<a href="javascript: void(0);" class="eventLink" data-id="' . $event['events_id'] . '" data-type="btnShowDetail" data-d="'.((isset($_GET["d"])) ? $_GET["d"] : "").'" data-go="'.((isset($_GET["go"])) ? $_GET["go"] : "").'">' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</a><br>';
-                                        } else {
-                                            echo '<span>' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"])) . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"])) . ' ' . $event["events_description"] . '</span><br>';
-                                        }
+                            if (isset($events[$i])) {
+                                foreach ($events[$i] as $event) {
+                                    if ($currentUser == $event["events_employer"] || $currentRole == 2) {
+                                        echo '<a href="javascript: void(0);" class="eventLink" data-id="'
+                                            . $event['events_id'] . '" data-type="btnShowDetail" data-d="'
+                                            . ((isset($_GET["d"])) ? $_GET["d"] : "") . '" data-go="'
+                                            . ((isset($_GET["go"])) ? $_GET["go"] : "") . '">'
+                                            . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"]))
+                                            . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"]))
+                                            . ' ' . $event["events_description"] . '</a><br>';
+                                    } else {
+                                        echo '<span>' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_start"]))
+                                            . ' - ' . date((($timeFormat == 12) ? 'h:i a' : 'H:i'), strtotime($event["events_end"]))
+                                            . ' ' . $event["events_description"] . '</span><br>';
                                     }
-                                } ?>
-                            </td>
-                            <?
-                            $i++;
-                        }
-                        $start++;
-                        }
-                        ?>
-                    </tr>
-                </table>
-            </div>
+                                }
+                            } ?>
+                        </td>
+                        <?
+                        $i++;
+                    }
+                    $start++;
+                    }
+                    ?>
+                </tr>
+            </table>
         </div>
-        <div id="menuDiv">
-            <a href="index.php?c=bookit&a=index&room=<?= $currentRoom ?><?=(isset($_GET["d"])) ? "&d=".$_GET["d"] : ''?><?=(isset($_GET["go"])) ? "&go=".$_GET["go"] : ''?>" class="btn btn-default"
-               style="color: #2b669a">Book It</a>&nbsp;&nbsp;
-            <? if (App::checkAdmin()) { ?>
-                <a href="index.php?c=employeelist&a=index" class="btn btn-default" style="color: #2b669a">Employee
-                    List</a>
-            <? } ?>
-        </div>
+    </div>
+    <div id="menuDiv">
+        <a href="index.php?c=bookit&a=index&room=<?= $currentRoom ?><?= (isset($_GET["d"])) ? "&d=" . $_GET["d"] : '' ?><?= (isset($_GET["go"])) ? "&go=" . $_GET["go"] : '' ?>"
+           class="btn btn-default"
+           style="color: #2b669a">Book It</a>&nbsp;&nbsp;
+        <? if (App::checkAdmin()) { ?>
+            <a href="index.php?c=employeelist&a=index" class="btn btn-default" style="color: #2b669a">Employee
+                List</a>
+        <? } ?>
+    </div>
 </div>
 <div id="myModal" class="modal fade in" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="false"
@@ -198,7 +233,22 @@
                 dataType: "json"
             });
         });
+        $('#format').on('click', function () {
+            console.log('format = ', $(this).val());
+            $.ajax({
+                type: "POST",
+                url: "index.php?c=index&a=setOptions",
+                data: {
+                    "options": $(this).val()
+                },
+                success: function (response) {
+                    $(location).attr('href', 'index.php?options=<?= $options ?>');
+                },
+                dataType: "json"
+            });
+        });
     });
+
     $("a[data-type=btnShowDetail]").on("click", function () {
         var eventId = $(this).attr("data-id");
 
@@ -233,8 +283,8 @@
                             var eventId = $(this).attr("data-id");
 
                             var goToMonth = '';
-                            goToMonth += '&d='+d;
-                            goToMonth += '&go='+go;
+                            goToMonth += '&d=' + d;
+                            goToMonth += '&go=' + go;
                             $(location).attr('href', 'index.php?c=bookit&a=update&id=' + eventId + goToMonth);
                         });
                         $("#btnDelete").unbind("click").bind("click", function () {
@@ -243,8 +293,8 @@
                             $("#confirmModal").modal("show");
 
                             var goToMonth = '';
-                            goToMonth += '&d='+d;
-                            goToMonth += '&go='+go;
+                            goToMonth += '&d=' + d;
+                            goToMonth += '&go=' + go;
 
                             $("#btnYes").unbind("click").bind("click", function () {
                                 console.log(goToMonth);
